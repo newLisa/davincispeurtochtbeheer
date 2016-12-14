@@ -22,12 +22,12 @@
                                 <td>{{ $quest->naam }}</td>
                                 <td>{{ $quest->opleiding }}</td>
                                 <td>{{ $quest->informatie }}</td>
-                                <td><a href="#" class="fa fa-pencil" aria-hidden="true"></a> <a href="#" class="fa fa-trash" aria-hidden="true"></a></td>
+                                <td><a href="{{ url('/quests/edit/' . $quest->id) }}" class="fa fa-pencil" aria-hidden="true"></a> <a href="{{ url('/quests/delete/' . $quest->id) }}" class="fa fa-trash" aria-hidden="true"></a></td>
                             </tr>
                         @endforeach
                     </table>
                     <button class="btn btn-secondary">View All</button>
-                    <button class="btn btn-primary">Add</button>
+                    <a href="{{ url('/quests/add') }}" class="btn btn-primary">Add</a>
                 </div>
             </div>
         </div>

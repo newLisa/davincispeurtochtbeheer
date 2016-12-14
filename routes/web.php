@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@index');
 
 Auth::routes();
 
@@ -23,4 +21,7 @@ Route::get('/home', 'HomeController@index');
 
 //Quests
 Route::get('/quests/add', 'QuestController@add');
+Route::get('/quests/edit/{id}', 'QuestController@edit');
 Route::post('/quests/post', 'QuestController@postAction');
+Route::post('/quest/put/{id}', 'QuestController@putAction')
+Route::get('/quests/delete/{id}', 'QuestController@deleteAction');
