@@ -52,12 +52,13 @@ class QuestController extends Controller
     {
         $client = new Client(['base_uri' => 'http://www.intro.dvc-icta.nl/SpeurtochtApi/web/']);
         $data = $_POST;
+        var_dump($data);
         
         $quest['naam'] = $data["name"];
         $quest['opleiding'] = $data['course'];
         $quest['informatie'] = $data['info'];
 
-        $r = $client->request('POST', 'speurtocht/', [
+        $r = $client->request('POST', 'speurtocht/put/' . $id, [
             'body' => json_encode($quest)
         ]);
 
@@ -68,6 +69,13 @@ class QuestController extends Controller
     {
         $client = new Client(['base_uri' => 'http://www.intro.dvc-icta.nl/SpeurtochtApi/web/']);
         $response = $client->request('POST', 'speurtocht/delete/' . $id, []);
+        return back();
+    }
+
+    public function restoreAction($id)
+    {
+        $client = new Client(['base_uri' => 'http://www.intro.dvc-icta.nl/SpeurtochtApi/web/']);
+        $response = $client->request('POST', 'speurtocht/restore/' . $id, []);
         return back();
     }
 }

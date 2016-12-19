@@ -35,7 +35,7 @@
                             </div>
 
                             <div class="form-group">
-                                {!! Form::submit('Create Quest', 
+                                {!! Form::submit('Edit Quest', 
                                   array('class'=>'btn btn-primary')) !!}
                             </div>
                         {{ Form::close() }}
