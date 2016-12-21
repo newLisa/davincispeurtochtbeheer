@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Routing\Redirector;
 
 class QuestController extends Controller
@@ -21,15 +22,27 @@ class QuestController extends Controller
 
     public function add()
     {
-    	return view('quest/quest');
+    	return view('quest/add');
     }
 
     public function edit($id)
     {
         $client = new Client();
-        $res = $client->get('http://www.intro.dvc-icta.nl/SpeurtochtApi/web/speurtocht/' . $id);
-        $quest = json_decode ($res->getBody());
-        return view('quest/quest', ['quest' => $quest]);
+        
+      $res = $client->get('http://www.intro.dvc-icta.nl/SpeurtochtApi/web/speurtocht/' . $id, ['http_errors' => false]);
+      
+        $status = $res->getStatusCode();
+        if ($status == 200)
+         {
+
+            $quest = json_decode ($res->getBody());
+            return view('quest/edit', ['quest' => $quest]);
+        }
+        else
+        {
+            return view('quest/404');
+
+        }       
     }
 
     public function postAction()
