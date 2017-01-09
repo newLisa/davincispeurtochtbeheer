@@ -8,7 +8,7 @@
        #map-canvas {display: block; height: 300px; width: 600px;}
     </style>
 <div id="markerFormBlock" hidden="true">
-    <div class="panel panel-default">
+    <div class="panel panel-default" id="markerListItem">
         <div class="panel-heading" role="tab" id="headingOne">
           <h4 class="panel-title">
             <a role="button" data-toggle="collapse" data-parent="#accordion" href="#replaceThis" aria-expanded="true" aria-controls="replaceThis">
@@ -21,7 +21,7 @@
                 {{ Form::open(array('url' => 'quests/post')) }}
                     <div class="form-group">
                         {!! Form::label('Marker Name') !!}
-                        {!! Form::number('Lat', null, 
+                        {!! Form::text('Name', null, 
                                         array('required', 
                                         'class'=>'form-control', 
                                         'placeholder'=>'Marker Name')) !!}
@@ -31,13 +31,15 @@
                         {!! Form::label('Latitude') !!}
                         {!! Form::number('lat', null, 
                                         array('required', 
-                                        'class'=>'form-control', 
+                                        'class'=>'form-control LatitudeId', 
+                                        'readonly' => 'true',
                                         'placeholder'=>'Latitude')) !!}
 
                         {!! Form::label('Longitude') !!}
                         {!! Form::number('lng', null, 
                                         array('required', 
-                                        'class'=>'form-control', 
+                                        'class'=>'form-control LongitudeId',
+                                        'readonly' => 'true',  
                                         'placeholder'=>'Longitude')) !!}
                     </div>
 
@@ -105,7 +107,7 @@
                           
                         </div>
                         <a class="btn btn-primary" onclick="clearMarkers()">Clear Map</a> 
-                        <a class="btn btn-primary" id="drawPoly" onclick="drawPoly()">Draw Polygon</a>
+                        <a class="btn btn-primary" id="PolyButton" onclick="">Draw Polygon</a>
                         
                     </div>
                 </div>
@@ -116,10 +118,13 @@
 
 
 <script>
+    var polygon;
+    var drawnPolygon = false;
     var map;
     var markerLocations = [];
+    var polyLocations = [];
     var markers = [];
-    var drawPolyButton = document.getElementById('drawPoly');
+    var drawPolyButton = document.getElementById('PolyButton');
     function initMap() 
     {
         var leerpark = {lat: 51.7986, lng: 4.68061};
@@ -130,42 +135,86 @@
             mapTypeId: 'terrain',
             disableDoubleClickZoom: true
         });
-
+        //TODO marker id meegeven
         google.maps.event.addListener(map, "click", function(event) 
         {
             var lat = event.latLng.lat();
             var lng = event.latLng.lng();
             var newLocation = {lat: lat, lng: lng};
             // populate yor box/field with lat, lng
-            var newMarker = new google.maps.Marker
-            ({
-                position: newLocation,
-                map: map
+            if (drawnPolygon) {
+                var newMarker = new google.maps.Marker
+                ({
+                    position: newLocation,
+                    map: map,
+                    icon: 'http://www.googlemapsmarkers.com/v1/m/009900/',
+                });
+                newMarker.metadata = {poly: false};
+            }
+            else
+            {
+                var newMarker = new google.maps.Marker
+                ({
+                    position: newLocation,
+                    map: map,
+                    icon: 'http://www.googlemapsmarkers.com/v1/p/0099FF/'
+                });
+                newMarker.metadata = {poly: true};
+            }
+
+            newMarker.addListener('click', function() {
+              map.setZoom(17);
+              map.setCenter(newMarker.getPosition());
             });
-            markerLocations.push(newLocation);
+            if (!drawnPolygon) {
+                polyLocations.push(newLocation);
+            }
+            else
+            {
+                markerLocations.push(newLocation);
+                updateMarkerList();
+                
+            }
             markers.push(newMarker);
-            updateMarkerList();
+            
+            
         });
 
         //draws the polygon between the markers in array
         google.maps.event.addDomListener(drawPolyButton, "click", function() 
         {
-            markerLocations.push(markerLocations[0]);
-            console.log(markerLocations);
+            if (!drawnPolygon) {
+
+                drawnPolygon = true;
+/*                markerLocations.push(markerLocations[0]);
+                console.log(markerLocations);*/
 
 
-            var polygon = new google.maps.Polygon
-            ({
-              paths: markerLocations,
-              strokeColor: '#FF0000',
-              strokeOpacity: 1,
-              strokeWeight: 2,
-              fillColor: '#FF0000',
-              fillOpacity: 0.35
-            });
-            
-            //console.log(polygon);
-            polygon.setMap(map);
+                polygon = new google.maps.Polygon
+                ({
+                  paths: polyLocations,
+                  strokeColor: '#FF0000',
+                  strokeOpacity: 1,
+                  strokeWeight: 2,
+                  fillColor: '#FF0000',
+                  fillOpacity: 0.1,
+                  clickable: false
+                });
+                
+                //console.log(polygon);
+                polygon.setMap(map);
+                clearPolyMarkers();
+                document.getElementById("PolyButton").innerHTML = 'Remove Polygon';
+
+            }
+            else
+            {
+                polygon.setMap(null);
+                drawnPolygon = false;
+                polyLocations = [];
+                document.getElementById("PolyButton").innerHTML = 'Draw Polygon';
+            }
+
             
         });   
 
@@ -181,37 +230,65 @@
     }
 
     function updateMarkerList() {
-        var divList;
-        
-        for (i = 0; i < markerLocations.length; i++)
-        {
-            if ((i + 1) == markerLocations.length)
+        if (markerLocations.length > 0) {
+            var divList;
+            
+            for (i = 0; i < markerLocations.length; i++)
             {
-                document.getElementById('replaceThis').className += " in";
+                if ((i + 1) == markerLocations.length)
+                {
+                    document.getElementById('replaceThis').className += " in";
+                }
+                else if (hasClass(document.getElementById('replaceThis'), "in"))
+                {
+                    $("#replaceThis").removeClass("in");
+                }
+                var original = document.getElementById('markerFormBlock');
+                var newDiv = original.cloneNode(true);
+                var newDivInner = replaceAll(newDiv.innerHTML, "replaceThis", "markerCollapse" + i);
+                if (divList != null)
+                {
+                    divList += newDivInner;
+                }
+                else
+                {
+                    divList = newDivInner;
+                }
+                
+
+                
             }
-            else if (hasClass(document.getElementById('replaceThis'), "in"))
+                //console.log(divList);
+                document.getElementById("accordion").innerHTML = divList;
+            
+
+            for (i = 0; i < markerLocations.length; i++)
             {
-                console.log("Hij komt er");
-                $("#replaceThis").removeClass("in");
+                console.log(markerLocations[i]);
+/*                document.getElementById("markerCollapse" + i).getElementsByClassName("LatitudeId")[0].value = markerLocations[i].lat;
+                document.getElementById("markerCollapse" + i).getElementsByClassName("LongitudeId")[0].value = markerLocations[i].lng;*/
             }
-            var original = document.getElementById('markerFormBlock');
-            var newDiv = original.cloneNode(true);
-            console.log(i);
-            console.log(markerLocations.length);
-            newDiv.id = "formCopy" + i;
-            var newDivInner = replaceAll(newDiv.innerHTML, "replaceThis", "markerCollapse" + i);
-            divList += newDivInner;
         }
 
-        document.getElementById("accordion").innerHTML = divList;
     }
 
     // Removes the markers from the map, but keeps them in the array.
       function clearMarkers() 
       {
         setMapOnAll(null);
-        polygon = null;
+        markerLocations = [];
+        polyLocations = [];
+        updateMarkerList();
+      }
 
+      function clearPolyMarkers()
+      {
+        for (var i = markers.length - 1; i >= 0; i--) {
+            if(markers[i].metadata.poly)
+            {
+                markers[i].setMap(null);
+            }
+        }
       }
 
     // Sets the map on all markers in the array.
