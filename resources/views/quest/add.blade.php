@@ -30,6 +30,29 @@
                                         'onkeyup'=>'updateText(this)')) !!}
                     </div>
 
+
+                    <div class="form-group">
+                        {!! Form::label('Location Information') !!}
+                        {!! Form::textarea('info', null, 
+                            array('required', 
+                                  'class'=>'form-control', 
+                                  'placeholder'=>'Location Information')) !!}
+
+                        
+                    </div>
+                    <div class="form-check">
+                        {!! Form::checkbox('isQr', null, false,
+                            array('class'=>'form-check-input', 'id'=>'qrCheck')) 
+                        !!}
+                        {!! Form::label('QR Marker') !!}
+                    </div>
+                    <div class="form-check">
+                        {!! Form::checkbox('isVisible', null, false,
+                            array('class'=>'form-check-input', 'id'=>'visibleCheck')) 
+                        !!}
+                        {!! Form::label('Altijd Zichtbaar') !!}
+                        
+                    </div>
                     <div class="form-group">
                         {!! Form::label('Latitude') !!}
                         {!! Form::number('lat', null, 
@@ -44,14 +67,6 @@
                                         'class'=>'form-control LongitudeId',
                                         'readonly' => 'true',  
                                         'placeholder'=>'Longitude')) !!}
-                    </div>
-
-                    <div class="form-group">
-                        {!! Form::label('Location Information') !!}
-                        {!! Form::textarea('info', null, 
-                            array('required', 
-                                  'class'=>'form-control', 
-                                  'placeholder'=>'Location Information')) !!}
                     </div>
 
                     <div class="form-group">
@@ -149,11 +164,11 @@
         //add on-click listener to the map so we can place markers 
         google.maps.event.addListener(map, "click", function(event) 
         {
+            updateFormValues();
             //store the location the user has clicked
             var lat = event.latLng.lat();
             var lng = event.latLng.lng();
             var newLocation = {lat: lat, lng: lng};
-            
             //check of we are in polygon draw state or place markers state
             if (drawPolygon) 
             {
@@ -163,7 +178,6 @@
                     map: map,
                     icon: 'http://www.googlemapsmarkers.com/v1/p' + polyMarkerId + '/0099FF/'
                 });
-                newMarker.metadata = {poly: true};
                 polyMarkerId++;
             }
             else
@@ -177,12 +191,13 @@
                 });
                 //set poly to false to insicate that this is a polygon marker and give an id
                 var markerName = "Marker " + markerId;
-                newMarker.metadata = {poly: false, id:markerId, name:markerName};
+                newMarker.metadata = {id:markerId, name:markerName, location:newLocation, isQR:0, isVisible:0};
                 markerId++;
             }
 
             ///add a on-click listener to the google marker we just created and zoom/pan to it 
-                newMarker.addListener('click', function() {
+            newMarker.addListener('click', function() 
+            {
                 map.setZoom(17);
                 map.setCenter(newMarker.getPosition());
             });
@@ -242,16 +257,6 @@
         });   
     }
 
-    function addMapOnClickListener()
-    {
-
-    }
-
-    function addDrawPolyButtonpOnClickListener()
-    {
-        
-    }
-
     function replaceAll(str, find, replace) 
     {
         return str.replace(new RegExp(find, 'g'), replace);
@@ -287,6 +292,9 @@
                 var newDivInner = replaceAll(newDivInner, "markerHeader", "markerHeader" + markers[i].metadata.id);
                 var newDivInner = replaceAll(newDivInner, "markerNameInput", "markerNameInput" + markers[i].metadata.id);
                 var newDivInner = replaceAll(newDivInner, "removeMarkerButton", "removeMarkerButton" + markers[i].metadata.id);
+                var newDivInner = replaceAll(newDivInner, "qrCheck", "qrCheck" + markers[i].metadata.id);
+                var newDivInner = replaceAll(newDivInner, "visibleCheck", "visibleCheck" + markers[i].metadata.id);
+
 
                 if (divList != null)
                 {
@@ -297,15 +305,27 @@
                     divList = newDivInner;
                 }
             }
-                document.getElementById("accordion").innerHTML = divList;
             
+            document.getElementById("accordion").innerHTML = divList;
 
             //loop through the markerlocations to set the latitude and longtitude in the form
             for (i = 0; i < markers.length; i++)
             {
                 document.getElementById("markerHeader" + markers[i].metadata.id).innerText = markers[i].metadata.name;
-                document.getElementById("markerCollapse" + markers[i].metadata.id).getElementsByClassName("LatitudeId")[0].value = markers[i].lat;
-                document.getElementById("markerCollapse" + markers[i].metadata.id).getElementsByClassName("LongitudeId")[0].value = markers[i].lng;
+                document.getElementById("qrCheck" + markers[i].metadata.id).checked = markers[i].metadata.isQR;
+                document.getElementById("visibleCheck" + markers[i].metadata.id).checked = markers[i].metadata.isVisible;
+                document.getElementById("markerCollapse" + markers[i].metadata.id).getElementsByClassName("LatitudeId")[0].value = markers[i].metadata.location.lat;
+                document.getElementById("markerCollapse" + markers[i].metadata.id).getElementsByClassName("LongitudeId")[0].value = markers[i].metadata.location.lng;
+                
+                
+                if (document.getElementById("markerNameInput" + markers[i].metadata.id).value != null) 
+                {
+                    if (document.getElementById("markerNameInput" + markers[i].metadata.id).value != "") 
+                    {
+                        markers[i].metadata.name = document.getElementById("markerNameInput" + markers[i].metadata.id).value;
+                        
+                    }
+                }
             }
         }
     }
@@ -363,51 +383,25 @@
 
     function removeMarker(removebtn)
     {
-
         //get the id of the marker by removing "markerCollapse"
         var selectedMarkerId = removebtn.id.substring('removeMarkerButton'.length);;
-        console.log(selectedMarkerId);
-        
+
         //find the marker with the same id as the one of wich the remove button was clicked
         for (var i = 0 ; i < markers.length; i++) 
         {
-            if (document.getElementById("markerNameInput" + markers[i].metadata.id).value != "") 
-            {
-                markers[i].metadata.name = document.getElementById("markerNameInput" + markers[i].metadata.id).value;
-            }
             if (markers[i].metadata.id == selectedMarkerId) 
             {
                 //remove marker from map and arrays
                 markers[i].setMap(null);
                 markers.splice(i, 1);
                 markerLocations.splice(i, 1);
+
                 //remove the marker collapse
-                if (i != 0)
-                {
-                    document.getElementById('markerCollapse' + selectedMarkerId).parentElement.remove();
-                }
-                //if it was the last marker we also need to remove the accordion
-                else
-                {
-                    var lastparent = document.getElementById('markerCollapse' + selectedMarkerId).parentElement;
-                    var acc = document.getElementById("accordion");
-                    while (acc.firstChild) 
-                    {
-                        acc.removeChild(acc.firstChild);
-                    }
-                }
-                    
-                updateMarkerList();
-                //decrement markerid so that the next marker added still has the right id
-                markerId--; 
+                document.getElementById('markerCollapse' + selectedMarkerId).parentElement.remove();
+
+                i--;
             }
         }
-
-        //renew the id's on the markers
-/*        for (var i = 0; i < markers.length; i++) 
-        {
-            markers[i].metadata.id = i;
-        }*/
     }
 
     //updates the Marker Name text while you type
@@ -420,6 +414,20 @@
         if (input.value == "") 
         {
             document.getElementById("markerHeader" + markerId).innerText = "Marker " + markerId;
+        }
+    }
+
+    function updateFormValues()
+    {
+        for(var i = 0; i < markers.length; ++i)
+        {
+            if (document.getElementById("markerNameInput" + markers[i].metadata.id).value != "") 
+            {
+                markers[i].metadata.name = document.getElementById("markerNameInput" + markers[i].metadata.id).value;
+            }
+
+            markers[i].metadata.isQR = document.getElementById("qrCheck" + markers[i].metadata.id).checked;
+            markers[i].metadata.isVisible = document.getElementById("visibleCheck" + markers[i].metadata.id).checked;
         }
     }
 
