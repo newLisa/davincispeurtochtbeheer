@@ -25,7 +25,8 @@
                         {!! Form::text('Name', null, 
                                         array('required', 
                                         'class'=>'form-control', 
-                                        'placeholder'=>'Marker Name')) !!}
+                                        'placeholder'=>'Marker Name',
+                                        'onkeyup'=>'updateText(this)')) !!}
                     </div>
 
                     <div class="form-group">
@@ -311,6 +312,7 @@
         }
     }
 
+    //clear all normal location markers from the map
     function clearMarkers()
     {
         markerLocations = [];
@@ -321,6 +323,7 @@
         markers = [];
     }
 
+     //clears all polygon markers from the map, but lets the polygon itself remain
      function clearPolyMarkers()
      {
         polyLocations = [];
@@ -343,37 +346,44 @@
     function removeMarker(removebtn)
     {
         var selectedMarker;
+        //find the entire marker panel
         selectedMarker = removebtn.parentElement.parentElement.parentElement.id;
 
-         if (parseInt(selectedMarkerId) != 0)
-         {
-            selectedMarker = removebtn.parentElement.parentElement.parentElement.parentElement.id;
-         }
+         //if it is not the first one the order of elements is different, need 1 extra parent
+        if (parseInt(selectedMarkerId) != 0)
+        {
+           selectedMarker = removebtn.parentElement.parentElement.parentElement.parentElement.id;
+        }
 
+        //get the id of the marker by removing "markerCollapse"
         var selectedMarkerId = selectedMarker.substring('markerCollapse'.length);
         
+        //find the marker with the same id as the one of wich the remove button was clicked
         for (var i = 0 ; i < markers.length; i++) 
         {
             if (markers[i].metadata.id == selectedMarkerId) 
             {
+                //remove marker from map and arrays
                 markers[i].setMap(null);
                 markers.splice(i, 1);
                 markerLocations.splice(i, 1);
+                //if it was the last marker we also need to remove the accordion
                 if (selectedMarkerId != 0)
                 {
                     document.getElementById(selectedMarker).parentElement.remove();
                 }
                 else
                 {
-                    //todo werkt niet laatste marker div verwijderen
                     var lastparent = document.getElementById(selectedMarker).parentElement  ;
-                    while (lastparent.firstChild) 
+                    var acc = document.getElementById("accordion");
+                    while (acc.firstChild) 
                     {
-                        lastparent.removeChild(lastparent.firstChild);
+                        acc.removeChild(acc.firstChild);
                     }
                 }
                     
                 updateMarkerList();
+                //decrement markerid so that the next marker added still has the right id
                 markerId--; 
             }
         }
@@ -383,6 +393,15 @@
         {
             markers[i].metadata.id = i;
         }
+    }
+
+    //updates the Marker Name text while you type
+    function updateText(input)
+    {
+        //find the marker heading
+        var markerName = input.parentElement.parentElement.parentElement.parentElement.parentElement.firstChild.nextSibling.firstChild.nextElementSibling;
+        //set text to input value
+        markerName.innerText = input.value;
     }
 </script>
 <script async defer
