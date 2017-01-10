@@ -142,8 +142,14 @@
             disableDoubleClickZoom: true
         });
 
-        //add on-click listener to the map so we can place markers 
-        google.maps.event.addListener(map, "click", function(event) 
+        addMapOnClickListener();
+        addDrawPolyButtonpOnClickListener();
+    }
+  
+    //add on-click listener to the map so we can place markers 
+    function addMapOnClickListener()
+    {
+         google.maps.event.addListener(map, "click", function(event) 
         {
             //store the location the user has clicked
             var lat = event.latLng.lat();
@@ -195,9 +201,12 @@
                 updateMarkerList();
             }
         });
+    }
 
-        //add a on-click listerer to the button that 
-        //draws the polygon between the markers in the marker array
+    //add a on-click listerer to the button that 
+    //draws the polygon between the markers in the marker array
+    function addDrawPolyButtonpOnClickListener()
+    {
         google.maps.event.addDomListener(drawPolyButton, "click", function() 
         {
             if (drawPolygon) //draw the polygon if we are in draw polygon state
