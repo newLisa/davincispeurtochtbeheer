@@ -12,7 +12,7 @@
     <div class="panel panel-default" id="markerListItem">
         <div class="panel-heading" role="tab" id="headingOne">
           <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#replaceThis" aria-expanded="true" aria-controls="replaceThis">
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#replaceThis" aria-expanded="true" aria-controls="replaceThis" id="markerHeader">
               Marker Name
             </a>
           </h4>
@@ -25,6 +25,7 @@
                         {!! Form::text('Name', null, 
                                         array('required', 
                                         'class'=>'form-control', 
+                                        'id' => 'markerNameInput',
                                         'placeholder'=>'Marker Name',
                                         'onkeyup'=>'updateText(this)')) !!}
                     </div>
@@ -56,6 +57,7 @@
                     <div class="form-group">
                         {!! Form::button('Remove Marker', 
                           array('class'=>'btn btn-danger',
+                                'id' => 'removeMarkerButton',
                                 'onclick'=>'removeMarker(this)')) !!}
                     </div>
                 {{ Form::close() }}
@@ -120,7 +122,8 @@
 </div>
 
 <script>
-    var markerId = 0;
+    var markerId = 1;
+    var polyMarkerId = 1;
     var polygon;
     var drawPolygon = true;
     var map;
@@ -132,6 +135,7 @@
 
     function initMap() 
     {
+
         //default location for the camera to zoom zo
         var leerpark = {lat: 51.7986, lng: 4.68061};
         var map = new google.maps.Map(document.getElementById('map'), 
@@ -142,14 +146,8 @@
             disableDoubleClickZoom: true
         });
 
-        addMapOnClickListener();
-        addDrawPolyButtonpOnClickListener();
-    }
-  
-    //add on-click listener to the map so we can place markers 
-    function addMapOnClickListener()
-    {
-         google.maps.event.addListener(map, "click", function(event) 
+        //add on-click listener to the map so we can place markers 
+        google.maps.event.addListener(map, "click", function(event) 
         {
             //store the location the user has clicked
             var lat = event.latLng.lat();
@@ -163,9 +161,10 @@
                 ({
                     position: newLocation,
                     map: map,
-                    icon: 'http://www.googlemapsmarkers.com/v1/p/0099FF/'
+                    icon: 'http://www.googlemapsmarkers.com/v1/p' + polyMarkerId + '/0099FF/'
                 });
                 newMarker.metadata = {poly: true};
+                polyMarkerId++;
             }
             else
             {
@@ -174,10 +173,11 @@
                 ({
                     position: newLocation,
                     map: map,
-                    icon: 'http://www.googlemapsmarkers.com/v1/m/009900/'
+                    icon: 'http://www.googlemapsmarkers.com/v1/' + markerId + '/009900/'
                 });
                 //set poly to false to insicate that this is a polygon marker and give an id
-                newMarker.metadata = {poly: false, id:markerId};
+                var markerName = "Marker " + markerId;
+                newMarker.metadata = {poly: false, id:markerId, name:markerName};
                 markerId++;
             }
 
@@ -185,7 +185,6 @@
                 newMarker.addListener('click', function() {
                 map.setZoom(17);
                 map.setCenter(newMarker.getPosition());
-                console.log(newMarker.metadata.id);
             });
 
             //check in what state we are and add the location to the appropiate array
@@ -201,12 +200,9 @@
                 updateMarkerList();
             }
         });
-    }
 
-    //add a on-click listerer to the button that 
-    //draws the polygon between the markers in the marker array
-    function addDrawPolyButtonpOnClickListener()
-    {
+        //add a on-click listerer to the button that 
+        //draws the polygon between the markers in the marker array
         google.maps.event.addDomListener(drawPolyButton, "click", function() 
         {
             if (drawPolygon) //draw the polygon if we are in draw polygon state
@@ -233,6 +229,7 @@
             }
             else //if we are not in draw polygon state we remove the polygon
             {
+                polyMarkerId = 1;
                 //remove the polygon from the map
                 polygon.setMap(null);
                 //go back into draw polygon state
@@ -243,6 +240,16 @@
                 document.getElementById("PolyButton").innerHTML = 'Draw Polygon';
             }          
         });   
+    }
+
+    function addMapOnClickListener()
+    {
+
+    }
+
+    function addDrawPolyButtonpOnClickListener()
+    {
+        
     }
 
     function replaceAll(str, find, replace) 
@@ -259,14 +266,13 @@
     //updates the list of created markers on the right side of the screen
     function updateMarkerList() 
     {
-        if (markerLocations.length > 0)
+        if (markers.length > 0)
         {
             var divList;
             
-            for (i = 0; i < markerLocations.length; i++)
+            for (i = 0; i < markers.length; i++)
             {
-               
-                if ((i + 1) == markerLocations.length)
+                if ((i + 1) == markers.length)
                 {
                     document.getElementById('replaceThis').className += " in";
                 }
@@ -277,7 +283,10 @@
 
                 var original = document.getElementById('markerFormBlock');
                 var newDiv = original.cloneNode(true);
-                var newDivInner = replaceAll(newDiv.innerHTML, "replaceThis", "markerCollapse" + i);
+                var newDivInner = replaceAll(newDiv.innerHTML, "replaceThis", "markerCollapse" + markers[i].metadata.id);
+                var newDivInner = replaceAll(newDivInner, "markerHeader", "markerHeader" + markers[i].metadata.id);
+                var newDivInner = replaceAll(newDivInner, "markerNameInput", "markerNameInput" + markers[i].metadata.id);
+                var newDivInner = replaceAll(newDivInner, "removeMarkerButton", "removeMarkerButton" + markers[i].metadata.id);
 
                 if (divList != null)
                 {
@@ -292,10 +301,11 @@
             
 
             //loop through the markerlocations to set the latitude and longtitude in the form
-            for (i = 0; i < markerLocations.length; i++)
+            for (i = 0; i < markers.length; i++)
             {
-                document.getElementById("markerCollapse" + i).getElementsByClassName("LatitudeId")[0].value = markerLocations[i].lat;
-                document.getElementById("markerCollapse" + i).getElementsByClassName("LongitudeId")[0].value = markerLocations[i].lng;
+                document.getElementById("markerHeader" + markers[i].metadata.id).innerText = markers[i].metadata.name;
+                document.getElementById("markerCollapse" + markers[i].metadata.id).getElementsByClassName("LatitudeId")[0].value = markers[i].lat;
+                document.getElementById("markerCollapse" + markers[i].metadata.id).getElementsByClassName("LongitudeId")[0].value = markers[i].lng;
             }
         }
     }
@@ -303,7 +313,8 @@
     //resets the whole map
     function clearMap() 
     {
-        markerId = 0;
+        markerId = 1;
+        polyMarkerId = 1;
         drawPolygon = true;
         polygon.setMap(null);
         setMapOnAll(null);
@@ -352,22 +363,18 @@
 
     function removeMarker(removebtn)
     {
-        var selectedMarker;
-        //find the entire marker panel
-        selectedMarker = removebtn.parentElement.parentElement.parentElement.id;
-
-         //if it is not the first one the order of elements is different, need 1 extra parent
-        if (parseInt(selectedMarkerId) != 0)
-        {
-           selectedMarker = removebtn.parentElement.parentElement.parentElement.parentElement.id;
-        }
 
         //get the id of the marker by removing "markerCollapse"
-        var selectedMarkerId = selectedMarker.substring('markerCollapse'.length);
+        var selectedMarkerId = removebtn.id.substring('removeMarkerButton'.length);;
+        console.log(selectedMarkerId);
         
         //find the marker with the same id as the one of wich the remove button was clicked
         for (var i = 0 ; i < markers.length; i++) 
         {
+            if (document.getElementById("markerNameInput" + markers[i].metadata.id).value != "") 
+            {
+                markers[i].metadata.name = document.getElementById("markerNameInput" + markers[i].metadata.id).value;
+            }
             if (markers[i].metadata.id == selectedMarkerId) 
             {
                 //remove marker from map and arrays
@@ -375,14 +382,14 @@
                 markers.splice(i, 1);
                 markerLocations.splice(i, 1);
                 //remove the marker collapse
-                if (selectedMarkerId != 0)
+                if (i != 0)
                 {
-                    document.getElementById(selectedMarker).parentElement.remove();
+                    document.getElementById('markerCollapse' + selectedMarkerId).parentElement.remove();
                 }
                 //if it was the last marker we also need to remove the accordion
                 else
                 {
-                    var lastparent = document.getElementById(selectedMarker).parentElement;
+                    var lastparent = document.getElementById('markerCollapse' + selectedMarkerId).parentElement;
                     var acc = document.getElementById("accordion");
                     while (acc.firstChild) 
                     {
@@ -397,20 +404,25 @@
         }
 
         //renew the id's on the markers
-        for (var i = 0; i < markers.length; i++) 
+/*        for (var i = 0; i < markers.length; i++) 
         {
             markers[i].metadata.id = i;
-        }
+        }*/
     }
 
     //updates the Marker Name text while you type
     function updateText(input)
     {
         //find the marker heading
-        var markerName = input.parentElement.parentElement.parentElement.parentElement.parentElement.firstChild.nextSibling.firstChild.nextElementSibling;
+        var markerId = input.id.substring('markerNameInput'.length);
         //set text to input value
-        markerName.innerText = input.value;
+        document.getElementById("markerHeader" + markerId).innerText = input.value;
+        if (input.value == "") 
+        {
+            document.getElementById("markerHeader" + markerId).innerText = "Marker " + markerId;
+        }
     }
+
 </script>
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD80w686NAZVpXDIDK7sbUbe7R6zYUU-OI&callback=initMap"></script>
