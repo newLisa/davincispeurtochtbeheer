@@ -119,7 +119,6 @@
     </div>
 </div>
 
-
 <script>
     var markerId = 0;
     var polygon;
@@ -130,6 +129,7 @@
     var markers = [];
     var polyMarkers = [];
     var drawPolyButton = document.getElementById('PolyButton');
+
     function initMap() 
     {
         //default location for the camera to zoom zo
@@ -142,8 +142,6 @@
             disableDoubleClickZoom: true
         });
 
-        //TODO marker id meegeven
-        //
         //add on-click listener to the map so we can place markers 
         google.maps.event.addListener(map, "click", function(event) 
         {
@@ -178,10 +176,10 @@
             }
 
             ///add a on-click listener to the google marker we just created and zoom/pan to it 
-            newMarker.addListener('click', function() {
-              map.setZoom(17);
-              map.setCenter(newMarker.getPosition());
-              console.log(newMarker.metadata.id);
+                newMarker.addListener('click', function() {
+                map.setZoom(17);
+                map.setCenter(newMarker.getPosition());
+                console.log(newMarker.metadata.id);
             });
 
             //check in what state we are and add the location to the appropiate array
@@ -203,19 +201,19 @@
         google.maps.event.addDomListener(drawPolyButton, "click", function() 
         {
             if (drawPolygon) //draw the polygon if we are in draw polygon state
-             {
+            {
                 drawPolygon = false;
 
                 //draw the polygon
                 polygon = new google.maps.Polygon
                 ({
-                  paths: polyLocations,
-                  strokeColor: '#FF0000',
-                  strokeOpacity: 1,
-                  strokeWeight: 2,
-                  fillColor: '#FF0000',
-                  fillOpacity: 0.1,
-                  clickable: false
+                    paths: polyLocations,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1,
+                    strokeWeight: 2,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.1,
+                    clickable: false
                 });
                 
                 polygon.setMap(map);
@@ -367,14 +365,15 @@
                 markers[i].setMap(null);
                 markers.splice(i, 1);
                 markerLocations.splice(i, 1);
-                //if it was the last marker we also need to remove the accordion
+                //remove the marker collapse
                 if (selectedMarkerId != 0)
                 {
                     document.getElementById(selectedMarker).parentElement.remove();
                 }
+                //if it was the last marker we also need to remove the accordion
                 else
                 {
-                    var lastparent = document.getElementById(selectedMarker).parentElement  ;
+                    var lastparent = document.getElementById(selectedMarker).parentElement;
                     var acc = document.getElementById("accordion");
                     while (acc.firstChild) 
                     {
@@ -404,11 +403,6 @@
         markerName.innerText = input.value;
     }
 </script>
-<script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD80w686NAZVpXDIDK7sbUbe7R6zYUU-OI&callback=initMap">
-</script>
 
-                    
-
-                    
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD80w686NAZVpXDIDK7sbUbe7R6zYUU-OI&callback=initMap"></script>
 @endsection
