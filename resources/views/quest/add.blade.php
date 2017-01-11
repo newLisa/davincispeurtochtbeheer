@@ -21,22 +21,23 @@
           <div class="panel-body">
                 {{ Form::open(array('url' => 'quests/post')) }}
                     <div class="form-group">
-                        {!! Form::label('Marker Name') !!}
+                        {!! Form::label('Locatie Naam') !!}
                         {!! Form::text('Name', null, 
                                         array('required', 
                                         'class'=>'form-control', 
                                         'id' => 'markerNameInput',
-                                        'placeholder'=>'Marker Name',
+                                        'placeholder'=>'Locatie Naam',
                                         'onkeyup'=>'updateText(this)')) !!}
                     </div>
 
 
                     <div class="form-group">
-                        {!! Form::label('Location Information') !!}
+                        {!! Form::label('Locatie Informatie') !!}
                         {!! Form::textarea('info', null, 
                             array('required', 
                                   'class'=>'form-control', 
-                                  'placeholder'=>'Location Information')) !!}
+                                  'placeholder'=>'Locatie Informatie',
+                                  'id'=>'markerInfo')) !!}
 
                         
                     </div>
@@ -70,7 +71,7 @@
                     </div>
 
                     <div class="form-group">
-                        {!! Form::button('Remove Marker', 
+                        {!! Form::button('Verwijder Locatie', 
                           array('class'=>'btn btn-danger',
                                 'id' => 'removeMarkerButton',
                                 'onclick'=>'removeMarker(this)')) !!}
@@ -85,36 +86,43 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Add Quest
+                    Quest Toevoegen
                 </div>
                 <div class="panel-body">
-                    <h2>Add Quest</h2>
+                    <h2>Quest Toevoegen</h2>
 
                     {{ Form::open(array('url' => 'quests/post')) }}
                         <div class="form-group">
-                            {!! Form::label('Quest Name') !!}
+                            {!! Form::label('Quest Naam') !!}
                             {!! Form::text('name', null, 
                                             array('required', 
                                             'class'=>'form-control', 
-                                            'placeholder'=>'Quest name')) !!}
+                                            'id'=>'questName',
+                                            'placeholder'=>'Quest Naam')) !!}
                         </div>
 
                         <div class="form-group">
-                            {!! Form::label('Quest Course') !!}
+                            {!! Form::label('Quest Opleiding') !!}
                             <br>
-                            {!! Form::select('course', array('Ict' => 'Ict', 'Kapper' => 'Kapper'), array('class'=>'form-control')); !!}
+                            {!! Form::select('course', array('Ict' => 'Ict',
+                                                             'Kapper' => 'Kapper'),
+                                                              null,
+                                                              array('class'=>'form-control', 
+                                                              'id'=>'questCourse',
+                                                              'style'=>'width:200px')) !!}
                         </div>
 
                         <div class="form-group">
-                            {!! Form::label('Quest Information') !!}
+                            {!! Form::label('Quest Informatie') !!}
                             {!! Form::textarea('info', null, 
                                 array('required', 
                                       'class'=>'form-control', 
-                                      'placeholder'=>'Quest Information')) !!}
-                                      <br/><br/>
-                    
-                            <a class="btn btn-primary" onclick="clearMap()">Clear Map</a> 
-                            <a class="btn btn-primary" id="PolyButton" onclick="">Draw Polygon</a>
+                                      'id'=>'questInfo',
+                                      'placeholder'=>'Quest Informatie')) !!}
+                          
+                            <br/><br/>
+                            <a class="btn btn-primary" onclick="clearMap()">Reset Map</a> 
+                            <a class="btn btn-primary" id="PolyButton" onclick="">Teken Polygoon</a>
                         </div>
                     
 
@@ -127,7 +135,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::submit('Create Quest', 
+                    {!! Form::submit('Opslaan', 
                       array('class'=>'btn btn-success')) !!}
                 </div>
                 {{ Form::close() }}
@@ -142,7 +150,6 @@
     var polygon;
     var drawPolygon = true;
     var map;
-    var markerLocations = [];
     var polyLocations = [];
     var markers = [];
     var polyMarkers = [];
@@ -191,7 +198,7 @@
                 });
                 //set poly to false to insicate that this is a polygon marker and give an id
                 var markerName = "Marker " + markerId;
-                newMarker.metadata = {id:markerId, name:markerName, location:newLocation, isQR:0, isVisible:0};
+                newMarker.metadata = {id:markerId, name:markerName, markerInfo:"", location:newLocation, isQR:0, isVisible:0};
                 markerId++;
             }
 
@@ -210,7 +217,6 @@
             }
             else
             {
-                markerLocations.push(newLocation);
                 markers.push(newMarker);           
                 updateMarkerList();
             }
@@ -240,7 +246,7 @@
                 //remove the polygon markers from the map
                 clearPolyMarkers();
                 //change the button text to remove
-                document.getElementById("PolyButton").innerHTML = 'Remove Polygon';
+                document.getElementById("PolyButton").innerHTML = 'Verijder Polygoon';
             }
             else //if we are not in draw polygon state we remove the polygon
             {
@@ -252,20 +258,9 @@
                 //clear the array of poly locations
                 polyLocations = [];
                 //change text back to draw
-                document.getElementById("PolyButton").innerHTML = 'Draw Polygon';
+                document.getElementById("PolyButton").innerHTML = 'Teken Polygoon';
             }          
         });   
-    }
-
-    function replaceAll(str, find, replace) 
-    {
-        return str.replace(new RegExp(find, 'g'), replace);
-    }
-
-    //returns true when elemets has classname cls
-    function hasClass(element, cls) 
-    {
-        return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
     }
 
     //updates the list of created markers on the right side of the screen
@@ -277,15 +272,18 @@
             
             for (i = 0; i < markers.length; i++)
             {
+                //fold open last collapse
                 if ((i + 1) == markers.length)
                 {
                     document.getElementById('replaceThis').className += " in";
                 }
+                //close the other collapses
                 else if (hasClass(document.getElementById('replaceThis'), "in"))
                 {
                     $("#replaceThis").removeClass("in");
                 }
 
+                //clone the original form and give the right id's to the elements
                 var original = document.getElementById('markerFormBlock');
                 var newDiv = original.cloneNode(true);
                 var newDivInner = replaceAll(newDiv.innerHTML, "replaceThis", "markerCollapse" + markers[i].metadata.id);
@@ -294,8 +292,9 @@
                 var newDivInner = replaceAll(newDivInner, "removeMarkerButton", "removeMarkerButton" + markers[i].metadata.id);
                 var newDivInner = replaceAll(newDivInner, "qrCheck", "qrCheck" + markers[i].metadata.id);
                 var newDivInner = replaceAll(newDivInner, "visibleCheck", "visibleCheck" + markers[i].metadata.id);
+                var newDivInner = replaceAll(newDivInner, "markerInfo", "markerInfo" + markers[i].metadata.id);
 
-
+                //add the div to the list
                 if (divList != null)
                 {
                     divList += newDivInner;
@@ -306,17 +305,18 @@
                 }
             }
             
+            //set the divlist in the accordion
             document.getElementById("accordion").innerHTML = divList;
 
-            //loop through the markerlocations to set the latitude and longtitude in the form
+            //loop through the markerlocations to set the values in the form
             for (i = 0; i < markers.length; i++)
             {
                 document.getElementById("markerHeader" + markers[i].metadata.id).innerText = markers[i].metadata.name;
+                document.getElementById("markerInfo" + markers[i].metadata.id).value = markers[i].metadata.markerInfo;
                 document.getElementById("qrCheck" + markers[i].metadata.id).checked = markers[i].metadata.isQR;
                 document.getElementById("visibleCheck" + markers[i].metadata.id).checked = markers[i].metadata.isVisible;
                 document.getElementById("markerCollapse" + markers[i].metadata.id).getElementsByClassName("LatitudeId")[0].value = markers[i].metadata.location.lat;
                 document.getElementById("markerCollapse" + markers[i].metadata.id).getElementsByClassName("LongitudeId")[0].value = markers[i].metadata.location.lng;
-                
                 
                 if (document.getElementById("markerNameInput" + markers[i].metadata.id).value != null) 
                 {
@@ -330,30 +330,67 @@
         }
     }
 
-    //resets the whole map
-    function clearMap() 
+    function removeMarker(removebtn)
     {
-        markerId = 1;
-        polyMarkerId = 1;
-        drawPolygon = true;
-        polygon.setMap(null);
-        setMapOnAll(null);
-        document.getElementById("PolyButton").innerHTML = 'Draw Polygon';
-        clearMarkers();
-        clearPolyMarkers();
-       
-       //remove the marker collapse forms
-        var acc = document.getElementById("accordion");
-        while (acc.firstChild) 
+        //get the id of the marker by removing "removeMarkerButton"
+        var selectedMarkerId = removebtn.id.substring('removeMarkerButton'.length);;
+
+        //find the marker with the same id as the one of wich the remove button was clicked
+        for (var i = 0 ; i < markers.length; i++) 
         {
-            acc.removeChild(acc.firstChild);
+            if (markers[i].metadata.id == selectedMarkerId) 
+            {
+                //remove marker from map and array
+                markers[i].setMap(null);
+                markers.splice(i, 1);
+
+                //remove the marker collapse
+                document.getElementById('markerCollapse' + selectedMarkerId).parentElement.remove();
+
+                i--;
+            }
+
+            //opens the last marker collapse after removal
+            if ((i + 1) == markers.length)
+            {
+                var lastmarkerId = markers[i].metadata.id;
+                document.getElementById('markerCollapse' + lastmarkerId).className += " in";
+            }
+        }
+    }
+
+    //updates the Marker Name text while you type
+    function updateText(input)
+    {
+        //find the marker id
+        var markerId = input.id.substring('markerNameInput'.length);
+        //set text to input value
+        document.getElementById("markerHeader" + markerId).innerText = input.value;
+        if (input.value == "") 
+        {
+            document.getElementById("markerHeader" + markerId).innerText = "Marker " + markerId;
+        }
+    }
+
+    //saves all the values in the form
+    function updateFormValues()
+    {
+        for(var i = 0; i < markers.length; ++i)
+        {
+            if (document.getElementById("markerNameInput" + markers[i].metadata.id).value != "") 
+            {
+                markers[i].metadata.name = document.getElementById("markerNameInput" + markers[i].metadata.id).value;
+            }
+
+            markers[i].metadata.markerInfo = document.getElementById("markerInfo" + markers[i].metadata.id).value;
+            markers[i].metadata.isQR = document.getElementById("qrCheck" + markers[i].metadata.id).checked;
+            markers[i].metadata.isVisible = document.getElementById("visibleCheck" + markers[i].metadata.id).checked;
         }
     }
 
     //clear all normal location markers from the map
     function clearMarkers()
     {
-        markerLocations = [];
         for (var i = markers.length - 1; i >= 0; i--)
         {
             markers[i].setMap(null);
@@ -381,54 +418,36 @@
         }
     }
 
-    function removeMarker(removebtn)
+    //resets the whole map
+    function clearMap() 
     {
-        //get the id of the marker by removing "markerCollapse"
-        var selectedMarkerId = removebtn.id.substring('removeMarkerButton'.length);;
-
-        //find the marker with the same id as the one of wich the remove button was clicked
-        for (var i = 0 ; i < markers.length; i++) 
+        markerId = 1;
+        polyMarkerId = 1;
+        drawPolygon = true;
+        polygon.setMap(null);
+        setMapOnAll(null);
+        document.getElementById("PolyButton").innerHTML = 'Teken Polygoon';
+        clearMarkers();
+        clearPolyMarkers();
+       
+       //remove the marker collapse forms
+        var acc = document.getElementById("accordion");
+        while (acc.firstChild) 
         {
-            if (markers[i].metadata.id == selectedMarkerId) 
-            {
-                //remove marker from map and arrays
-                markers[i].setMap(null);
-                markers.splice(i, 1);
-                markerLocations.splice(i, 1);
-
-                //remove the marker collapse
-                document.getElementById('markerCollapse' + selectedMarkerId).parentElement.remove();
-
-                i--;
-            }
+            acc.removeChild(acc.firstChild);
         }
     }
 
-    //updates the Marker Name text while you type
-    function updateText(input)
+    //replaces all occurences of "find" in "str", and replaces with "replace"
+    function replaceAll(str, find, replace) 
     {
-        //find the marker heading
-        var markerId = input.id.substring('markerNameInput'.length);
-        //set text to input value
-        document.getElementById("markerHeader" + markerId).innerText = input.value;
-        if (input.value == "") 
-        {
-            document.getElementById("markerHeader" + markerId).innerText = "Marker " + markerId;
-        }
+        return str.replace(new RegExp(find, 'g'), replace);
     }
 
-    function updateFormValues()
+    //returns true when elemets has classname cls
+    function hasClass(element, cls) 
     {
-        for(var i = 0; i < markers.length; ++i)
-        {
-            if (document.getElementById("markerNameInput" + markers[i].metadata.id).value != "") 
-            {
-                markers[i].metadata.name = document.getElementById("markerNameInput" + markers[i].metadata.id).value;
-            }
-
-            markers[i].metadata.isQR = document.getElementById("qrCheck" + markers[i].metadata.id).checked;
-            markers[i].metadata.isVisible = document.getElementById("visibleCheck" + markers[i].metadata.id).checked;
-        }
+        return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
     }
 
 </script>
