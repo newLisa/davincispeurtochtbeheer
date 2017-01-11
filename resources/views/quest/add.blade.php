@@ -186,6 +186,9 @@
                     icon: 'http://www.googlemapsmarkers.com/v1/p' + polyMarkerId + '/0099FF/'
                 });
                 polyMarkerId++;
+
+                 polyLocations.push(newLocation);
+                polyMarkers.push(newMarker);
             }
             else
             {
@@ -196,30 +199,35 @@
                     map: map,
                     icon: 'http://www.googlemapsmarkers.com/v1/' + markerId + '/009900/'
                 });
-                //set poly to false to insicate that this is a polygon marker and give an id
+                //set marker name and add marker metadata
                 var markerName = "Marker " + markerId;
                 newMarker.metadata = {id:markerId, name:markerName, markerInfo:"", location:newLocation, isQR:0, isVisible:0};
-                markerId++;
-            }
 
-            ///add a on-click listener to the google marker we just created and zoom/pan to it 
-            newMarker.addListener('click', function() 
-            {
-                map.setZoom(17);
-                map.setCenter(newMarker.getPosition());
-            });
-
-            //check in what state we are and add the location to the appropiate array
-            if (drawPolygon) 
-            {
-                polyLocations.push(newLocation);
-                polyMarkers.push(newMarker);
-            }
-            else
-            {
                 markers.push(newMarker);           
                 updateMarkerList();
-            }
+
+               ///add a on-click listener to the google marker we just created 
+                newMarker.addListener('click', function() 
+                {
+                    for (i = 0; i < markers.length; i++)
+                    {
+                        //open the right collapse 
+                        if (markers[i].metadata.id == newMarker.metadata.id)
+                        {
+                            document.getElementById('markerCollapse'+newMarker.metadata.id).className += " in";
+                        }
+                        //close the other collapses
+                        else if (hasClass(document.getElementById('markerCollapse'+markers[i].metadata.id), "in"))
+                        {
+                            $("#markerCollapse"+markers[i].metadata.id).removeClass("in");
+                        }
+                    }
+                    //pan to the clicked marker
+                    map.panTo(newMarker.getPosition());
+                });
+                
+                markerId++;
+            }      
         });
 
         //add a on-click listerer to the button that 
