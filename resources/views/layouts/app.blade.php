@@ -37,7 +37,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Speurtocht Beheer') }}
+                        <img class="headerLogo" src="/images/logo.png" >{{ config('app.name', 'Speurtocht Beheer') }}
                     </a>
                 </div>
 
