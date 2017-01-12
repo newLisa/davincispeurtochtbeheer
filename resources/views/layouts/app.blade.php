@@ -11,6 +11,7 @@
     <title>{{ config('app.name', 'Speurtocht Beheer') }}</title>
 
     <!-- Styles -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/font-awesome.css" rel="stylesheet">
 
@@ -37,7 +38,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        <img class="headerLogo" src="/images/logo.png" >{{ config('app.name', 'Speurtocht Beheer') }}
+                        <img class="headerLogo" src="/images/logo.png" >{{ config('app.name', ' Speurtocht Beheer') }}
                     </a>
                 </div>
 
@@ -83,6 +84,10 @@
     </div>
 
     <!-- Scripts -->
+    <script src="/js/tether.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
     <script src="/js/app.js"></script>
+    @yield('javascript')
 </body>
 </html>

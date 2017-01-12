@@ -1,85 +1,19 @@
+
+
 @extends('layouts.app')
 
-@section('content')
+
 <style>
     #map 
     {
         height: 700px;
     }
 </style>
-<div id="markerFormBlock" hidden="true">
-    <div class="panel panel-default" id="markerListItem">
-        <div class="panel-heading" role="tab" id="headingOne">
-          <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#replaceThis" aria-expanded="true" aria-controls="replaceThis" id="markerHeader">
-              Marker Name
-            </a>
-          </h4>
-        </div>
-        <div id="replaceThis" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-          <div class="panel-body">
-                {{ Form::open(array('url' => 'quests/post')) }}
-                    <div class="form-group">
-                        {!! Form::label('Locatie Naam') !!}
-                        {!! Form::text('Name', null, 
-                                        array('required', 
-                                        'class'=>'form-control', 
-                                        'id' => 'markerNameInput',
-                                        'placeholder'=>'Locatie Naam',
-                                        'onkeyup'=>'updateText(this)')) !!}
-                    </div>
+@section('content')
+@include('includes.questionModel');
+@include('includes.blankMarkerListItem');
 
 
-                    <div class="form-group">
-                        {!! Form::label('Locatie Informatie') !!}
-                        {!! Form::textarea('info', null, 
-                            array('required', 
-                                  'class'=>'form-control', 
-                                  'placeholder'=>'Locatie Informatie',
-                                  'id'=>'markerInfo')) !!}
-
-                        
-                    </div>
-                    <div class="form-check">
-                        {!! Form::checkbox('isQr', null, false,
-                            array('class'=>'form-check-input', 'id'=>'qrCheck', 'onClick' => 'updateMarkerImage(markerId)')) 
-                        !!}
-                        {!! Form::label('QR Marker') !!}
-                    </div>
-                    <div class="form-check">
-                        {!! Form::checkbox('isVisible', null, false,
-                            array('class'=>'form-check-input', 'id'=>'visibleCheck', 'onClick' => 'updateMarkerImage(markerId)')) 
-                        !!}
-                        {!! Form::label('Altijd Zichtbaar') !!}
-                        
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('Latitude') !!}
-                        {!! Form::number('lat', null, 
-                                        array('required', 
-                                        'class'=>'form-control LatitudeId', 
-                                        'readonly' => 'true',
-                                        'placeholder'=>'Latitude')) !!}
-
-                        {!! Form::label('Longitude') !!}
-                        {!! Form::number('lng', null, 
-                                        array('required', 
-                                        'class'=>'form-control LongitudeId',
-                                        'readonly' => 'true',  
-                                        'placeholder'=>'Longitude')) !!}
-                    </div>
-
-                    <div class="form-group">
-                        {!! Form::button('Verwijder Locatie', 
-                          array('class'=>'btn btn-danger',
-                                'id' => 'removeMarkerButton',
-                                'onclick'=>'removeMarker(this)')) !!}
-                    </div>
-                {{ Form::close() }}
-          </div>
-        </div>
-    </div>
-</div>
 <div class="col-md-2"></div>
     <div class="col-md-8">
         <div class="col-md-12">
@@ -120,8 +54,8 @@
                                       'placeholder'=>'Quest Informatie')) !!}
                           
                             <br/><br/>
-                            <a class="btn btn-primary" onclick="clearMap()">Reset Map</a> 
-                            <a class="btn btn-primary" id="PolyButton" onclick="">Teken Polygoon</a>
+                            <button type=button class="btn btn-primary" onclick="clearMap()">Reset Map</button> 
+                            <button type=button class="btn btn-primary" id="PolyButton" onclick="">Teken Polygoon</button>
                         </div>
                     
 
@@ -142,8 +76,14 @@
         </div>                        
     </div>
 </div>
+@endsection
+@section('javascript')
+
 
 <script>
+    var modal = document.getElementById('questionModal');
+    var modalContent = document.getElementById("modal-content");
+    var close = document.getElementById("closeQuestionModel");
     var markerId = 1;
     var polyMarkerId = 1;
     var polygon;
@@ -153,7 +93,37 @@
     var markers = [];
     var polyMarkers = [];
     var drawPolyButton = document.getElementById('PolyButton');
+    var questions = {question:"", answer1:"", answer2:"", answer3:"", answer4:"", correntAnswer:"", points:0, markerId:""};
+    $('#questionModal').modal('toggle');
 
+
+    //question Model setup
+    // When the user clicks on the button, open the modal
+    function showQuestionModel(markerId)
+    {
+        $('#questionModal').modal('toggle');
+    }
+
+    function closeQuestionModel()
+    {
+        $('#questionModal').modal('toggle');
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    close.onclick = function() {
+        $('#questionModal').modal('toggle');
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modalContent) {
+            $('#questionModal').modal('toggle');
+        }
+    }
+
+
+
+    //Map setup
     function initMap() 
     {
 
@@ -495,4 +465,5 @@
 </script>
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD80w686NAZVpXDIDK7sbUbe7R6zYUU-OI&callback=initMap"></script>
+
 @endsection
