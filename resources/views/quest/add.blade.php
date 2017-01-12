@@ -254,7 +254,7 @@
                 //remove the polygon markers from the map
                 clearPolyMarkers();
                 //change the button text to remove
-                document.getElementById("PolyButton").innerHTML = 'Verijder Polygoon';
+                document.getElementById("PolyButton").innerHTML = 'Verwijder Polygoon';
             }
             else //if we are not in draw polygon state we remove the polygon
             {
