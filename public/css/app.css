@@ -5,7 +5,9 @@
  	float: left;
  	margin-right: 1em;
  }
-
+.hidden 	{
+	display: none;
+}
 
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)

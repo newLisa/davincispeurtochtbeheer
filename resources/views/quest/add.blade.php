@@ -7,7 +7,6 @@
         height: 700px;
     }
 </style>
-
 <div id="markerFormBlock" hidden="true">
     <div class="panel panel-default" id="markerListItem">
         <div class="panel-heading" role="tab" id="headingOne">
@@ -43,13 +42,13 @@
                     </div>
                     <div class="form-check">
                         {!! Form::checkbox('isQr', null, false,
-                            array('class'=>'form-check-input', 'id'=>'qrCheck')) 
+                            array('class'=>'form-check-input', 'id'=>'qrCheck', 'onClick' => 'updateMarkerImage(markerId)')) 
                         !!}
                         {!! Form::label('QR Marker') !!}
                     </div>
                     <div class="form-check">
                         {!! Form::checkbox('isVisible', null, false,
-                            array('class'=>'form-check-input', 'id'=>'visibleCheck')) 
+                            array('class'=>'form-check-input', 'id'=>'visibleCheck', 'onClick' => 'updateMarkerImage(markerId)')) 
                         !!}
                         {!! Form::label('Altijd Zichtbaar') !!}
                         
@@ -197,7 +196,8 @@
                 ({
                     position: newLocation,
                     map: map,
-                    icon: 'http://www.googlemapsmarkers.com/v1/' + markerId + '/009900/'
+                    icon: '/images/greenmarker.png',
+                    labelContent: "2"
                 });
                 //set marker name and add marker metadata
                 var markerName = "Marker " + markerId;
@@ -301,6 +301,7 @@
                 var newDivInner = replaceAll(newDivInner, "qrCheck", "qrCheck" + markers[i].metadata.id);
                 var newDivInner = replaceAll(newDivInner, "visibleCheck", "visibleCheck" + markers[i].metadata.id);
                 var newDivInner = replaceAll(newDivInner, "markerInfo", "markerInfo" + markers[i].metadata.id);
+                var newDivInner = replaceAll(newDivInner, "markerId", markers[i].metadata.id);
 
                 //add the div to the list
                 if (divList != null)
@@ -397,6 +398,35 @@
             markers[i].metadata.markerInfo = document.getElementById("markerInfo" + markers[i].metadata.id).value;
             markers[i].metadata.isQR = document.getElementById("qrCheck" + markers[i].metadata.id).checked;
             markers[i].metadata.isVisible = document.getElementById("visibleCheck" + markers[i].metadata.id).checked;
+        }
+    }
+
+    //Check en update de marker image van een specifieke marker
+    function updateMarkerImage($markerId)
+    {
+        for(var i = 0; i < markers.length; ++i)
+        {
+            if (markers[i].metadata.id == $markerId) 
+            {
+                if (document.getElementById("qrCheck" + markers[i].metadata.id).checked == true && document.getElementById("visibleCheck" + markers[i].metadata.id).checked == false)
+                {
+                    markers[i].setIcon('/images/greenqr.png');  
+                }
+                else if (document.getElementById("qrCheck" + markers[i].metadata.id).checked == false && document.getElementById("visibleCheck" + markers[i].metadata.id).checked == true)
+                {
+                    markers[i].setIcon('/images/orangemarker.png');  
+                }
+                else if (document.getElementById("qrCheck" + markers[i].metadata.id).checked == true && document.getElementById("visibleCheck" + markers[i].metadata.id).checked == true)
+                {
+                    markers[i].setIcon('/images/orangeqrmarker.png');  
+
+                }
+                else
+                {
+                    markers[i].setIcon('/images/greenmarker.png');  
+                }
+            }
+           
         }
     }
 
