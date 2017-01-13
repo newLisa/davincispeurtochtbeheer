@@ -121,8 +121,6 @@
         }
     }
 
-
-
     //Map setup
     function initMap() 
     {

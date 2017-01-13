@@ -26,16 +26,25 @@
                                         'class'=>'form-control', 
                                         'placeholder'=>'De Vraag')) !!}
                     </div>
+                   
+       
+   
+
                     <div class="form-group">
                         {!! Form::label('Antwoord #1') !!}
                         {!! Form::text('Name', null, 
                                         array('required', 
                                         'class'=>'form-control', 
                                         'placeholder'=>'Antwoord #1')) !!}
-                        {!! Form::label('Correct antwoord') !!}
-                        {!! Form::radio('isCorrect', 1, true,
-                            array('class'=>'form-check-input', 'id'=>'qrCheck', 'onClick' => 'updateMarkerImage(markerId)')) 
-                        !!}
+                       <div class="btn-group btn-group-vertical" data-toggle="buttons">
+                        <label class="btn active">
+                            {!! Form::radio('isCorrect', 1, true,
+                                array('class'=>'form-check-input', 'type'=>'radio', 'id'=>'correct', 'onClick' => 'updateMarkerImage(markerId)')) 
+                            !!}
+                            <i class="fa fa-circle-o fa-2x"></i><i class="fa fa-dot-circle-o fa-2x"></i> <span>Correct Antwoord</span>
+                        </label>
+                        </div>
+
                     </div>
                     <div class="form-group">
                         {!! Form::label('Antwoord #2') !!}
@@ -43,10 +52,14 @@
                                         array('required', 
                                         'class'=>'form-control', 
                                         'placeholder'=>'Antwoord #2')) !!}
-                        {!! Form::label('Correct antwoord') !!}
-                        {!! Form::radio('isCorrect', 2, false,
-                            array('class'=>'form-check-input', 'id'=>'qrCheck', 'onClick' => 'updateMarkerImage(markerId)')) 
-                        !!}
+                        <div class="btn-group btn-group-vertical" data-toggle="buttons">
+                        <label class="btn active">
+                            {!! Form::radio('isCorrect', 0, false,
+                                array('class'=>'form-check-input', 'type'=>'radio', 'id'=>'correct', 'onClick' => 'updateMarkerImage(markerId)')) 
+                            !!}
+                            <i class="fa fa-circle-o fa-2x"></i><i class="fa fa-dot-circle-o fa-2x"></i> <span>Correct Antwoord</span>
+                        </label>
+                        </div>
                     </div>
                     <div class="form-group">
                         {!! Form::label('Antwoord #3') !!}
@@ -54,10 +67,14 @@
                                         array('required', 
                                         'class'=>'form-control', 
                                         'placeholder'=>'Antwoord #3')) !!}
-                        {!! Form::label('Correct antwoord') !!}
-                        {!! Form::radio('isCorrect', 3, false,
-                            array('class'=>'form-check-input', 'id'=>'qrCheck', 'onClick' => 'updateMarkerImage(markerId)')) 
-                        !!}
+                        <div class="btn-group btn-group-vertical" data-toggle="buttons">
+                        <label class="btn active">
+                            {!! Form::radio('isCorrect', 0, false,
+                                array('class'=>'form-check-input', 'type'=>'radio', 'id'=>'correct', 'onClick' => 'updateMarkerImage(markerId)')) 
+                            !!}
+                            <i class="fa fa-circle-o fa-2x"></i><i class="fa fa-dot-circle-o fa-2x"></i> <span>Correct Antwoord</span>
+                        </label>
+                        </div>
                     </div>
                     <div class="form-group">
                         {!! Form::label('Antwoord #4') !!}
@@ -65,10 +82,14 @@
                                         array('required', 
                                         'class'=>'form-control', 
                                         'placeholder'=>'Antwoord #4')) !!}
-                        {!! Form::label('Correct antwoord') !!}
-                        {!! Form::radio('isCorrect', 4, false,
-                            array('class'=>'form-check-input', 'id'=>'qrCheck', 'onClick' => 'updateMarkerImage(markerId)')) 
-                        !!}
+                        <div class="btn-group btn-group-vertical" data-toggle="buttons">
+                        <label class="btn active">
+                            {!! Form::radio('isCorrect', 0, false,
+                                array('class'=>'form-check-input', 'type'=>'radio', 'id'=>'correct', 'onClick' => 'updateMarkerImage(markerId)')) 
+                            !!}
+                            <i class="fa fa-circle-o fa-2x"></i><i class="fa fa-dot-circle-o fa-2x"></i> <span>Correct Antwoord</span>
+                        </label>
+                        </div>
                     </div>
                     <div class="form-group">
                         {!! Form::label('punten') !!}
