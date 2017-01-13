@@ -42,7 +42,7 @@
                                                               null,
                                                               array('class'=>'form-control', 
                                                               'id'=>'questCourse',
-                                                              'style'=>'width:200px')) !!}
+                                                              'style'=>'width:200px; height:36px')) !!}
                         </div>
 
                         <div class="form-group">
