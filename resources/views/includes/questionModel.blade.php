@@ -1,15 +1,15 @@
 <!-- The Modal -->
-<div id="questionModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div id="questionModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
 
-  <div class="modal-dialog" role="document">
-    <div id="modal-content" class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title" id="exampleModalLabel">Locatie Naam</h3>
-        <button id="closeQuestionModel" type="button" class="close" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
+    <div class="modal-dialog" role="document">
+        <div id="modal-content" class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="exampleModalLabel">Locatie Naam</h3>
+            <button id="closeQuestionModel" type="button" class="close" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <div class="modal-body">
         {{ Form::open(array('url' => 'quests/post')) }}
 <!--                     <div class="form-group">
                         {!! Form::label('Locatie Naam') !!}
@@ -26,9 +26,6 @@
                                         'class'=>'form-control', 
                                         'placeholder'=>'De Vraag')) !!}
                     </div>
-                   
-       
-   
 
                     <div class="form-group">
                         {!! Form::label('Antwoord #1') !!}
@@ -37,12 +34,12 @@
                                         'class'=>'form-control', 
                                         'placeholder'=>'Antwoord #1')) !!}
                        <div class="btn-group btn-group-vertical" data-toggle="buttons">
-                        <label class="btn active">
-                            {!! Form::radio('isCorrect', 1, true,
-                                array('class'=>'form-check-input', 'type'=>'radio', 'id'=>'correct', 'onClick' => 'updateMarkerImage(markerId)')) 
-                            !!}
-                            <i class="fa fa-circle-o fa-2x"></i><i class="fa fa-dot-circle-o fa-2x"></i> <span>Correct Antwoord</span>
-                        </label>
+                            <label class="btn active">
+                                {!! Form::radio('isCorrect', 1, true,
+                                    array('class'=>'form-check-input', 'type'=>'radio', 'id'=>'correct', 'onClick' => 'updateMarkerImage(markerId)')) 
+                                !!}
+                                <i class="fa fa-circle-o fa-2x"></i><i class="fa fa-dot-circle-o fa-2x"></i> <span>Correct Antwoord</span>
+                            </label>
                         </div>
 
                     </div>
@@ -107,8 +104,7 @@
                           'onClick' => 'closeQuestionModel()')) !!}
                     </div>
                 {{ Form::close() }}
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
-
 </div>

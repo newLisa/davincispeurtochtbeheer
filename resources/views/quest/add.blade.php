@@ -94,7 +94,6 @@
     var polyMarkers = [];
     var drawPolyButton = document.getElementById('PolyButton');
     var questions = {question:"", answer1:"", answer2:"", answer3:"", answer4:"", correntAnswer:"", points:0, markerId:""};
-    $('#questionModal').modal('toggle');
 
 
     //question Model setup
@@ -124,7 +123,6 @@
     //Map setup
     function initMap() 
     {
-
         //default location for the camera to zoom zo
         var leerpark = {lat: 51.7986, lng: 4.68061};
         var map = new google.maps.Map(document.getElementById('map'), 
