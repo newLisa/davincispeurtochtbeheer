@@ -338,6 +338,7 @@
                 document.getElementById('markerCollapse' + lastmarkerId).className += " in";
             }
         }
+        updateMarkerList();
     }
 
     //updates the Marker Name text while you type
