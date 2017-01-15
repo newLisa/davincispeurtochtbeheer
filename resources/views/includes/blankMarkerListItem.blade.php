@@ -20,7 +20,6 @@
                                         'onkeyup'=>'updateText(this)')) !!}
                     </div>
 
-
                     <div class="form-group">
                         {!! Form::label('Locatie Informatie') !!}
                         {!! Form::textarea('info', null, 
@@ -28,15 +27,15 @@
                                   'class'=>'form-control', 
                                   'placeholder'=>'Locatie Informatie',
                                   'id'=>'markerInfo')) !!}
-
-                        
                     </div>
+
                     <div class="form-check">
                         {!! Form::checkbox('isQr', null, false,
                             array('class'=>'form-check-input', 'id'=>'qrCheck', 'onClick' => 'updateMarkerImage(markerId)')) 
                         !!}
                         {!! Form::label('QR Marker') !!}
                     </div>
+
                     <div class="form-check">
                         {!! Form::checkbox('isVisible', null, false,
                             array('class'=>'form-check-input', 'id'=>'visibleCheck', 'onClick' => 'updateMarkerImage(markerId)')) 
@@ -44,12 +43,14 @@
                         {!! Form::label('Altijd Zichtbaar') !!}
                         
                     </div>
+
                     <div class="form-group">
                         {!! Form::button('Vraag Toevoegen', 
                           array('class'=>'btn btn-primary',
                                 'id' => 'addQuestionBtn',
                                 'onclick'=>'showQuestionModel(markerId)')) !!}
                     </div>
+                    
                     <div class="form-group">
                         {!! Form::label('Latitude') !!}
                         {!! Form::number('lat', null, 

@@ -21,7 +21,7 @@
                     </div> -->
                     <div class="form-group">
                         {!! Form::label('vraag') !!}
-                        {!! Form::text('Name', null, 
+                        {!! Form::text('question', null, 
                                         array('required', 
                                         'class'=>'form-control', 
                                         'placeholder'=>'De Vraag')) !!}
@@ -29,7 +29,7 @@
 
                     <div class="form-group">
                         {!! Form::label('Antwoord #1') !!}
-                        {!! Form::text('Name', null, 
+                        {!! Form::text('answer1', null, 
                                         array('required', 
                                         'class'=>'form-control', 
                                         'placeholder'=>'Antwoord #1')) !!}
@@ -45,7 +45,7 @@
                     </div>
                     <div class="form-group">
                         {!! Form::label('Antwoord #2') !!}
-                        {!! Form::text('Name', null, 
+                        {!! Form::text('answer2', null, 
                                         array('required', 
                                         'class'=>'form-control', 
                                         'placeholder'=>'Antwoord #2')) !!}
@@ -60,7 +60,7 @@
                     </div>
                     <div class="form-group">
                         {!! Form::label('Antwoord #3') !!}
-                        {!! Form::text('Name', null, 
+                        {!! Form::text('answer3', null, 
                                         array('required', 
                                         'class'=>'form-control', 
                                         'placeholder'=>'Antwoord #3')) !!}
@@ -75,7 +75,7 @@
                     </div>
                     <div class="form-group">
                         {!! Form::label('Antwoord #4') !!}
-                        {!! Form::text('Name', null, 
+                        {!! Form::text('answer4', null, 
                                         array('required', 
                                         'class'=>'form-control', 
                                         'placeholder'=>'Antwoord #4')) !!}
@@ -90,18 +90,19 @@
                     </div>
                     <div class="form-group">
                         {!! Form::label('punten') !!}
-                        {!! Form::number('Name', null, 
+                        {!! Form::number('points', null, 
                                         array('required', 
                                         'class'=>'form-control', 
                                         'placeholder'=>'punten')) !!}
                     </div>
 
-
                     <div class="modal-footer">
                         {!! Form::button('Opslaan', 
                           array('class'=>'btn btn-primary',
                           'type'=>'button',
-                          'onClick' => 'closeQuestionModel()')) !!}
+                          'id'=>'saveButton',
+                          'name'=>'saveButton',
+                          'onClick' => 'saveQuestionForm(this)')) !!}
                     </div>
                 {{ Form::close() }}
             </div>

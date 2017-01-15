@@ -93,19 +93,80 @@
     var markers = [];
     var polyMarkers = [];
     var drawPolyButton = document.getElementById('PolyButton');
-    var questions = {question:"", answer1:"", answer2:"", answer3:"", answer4:"", correntAnswer:"", points:0, markerId:""};
-
 
     //question Model setup
     // When the user clicks on the button, open the modal
-    function showQuestionModel(markerId)
+    function showQuestionModel(clickedMarkerId)
     {
+        //show the modal
         $('#questionModal').modal('toggle');
+        //set the markerId on the savebutton
+        document.getElementsByName('saveButton')[0].id = "saveButton" + clickedMarkerId;
+
+        //check to see if the question has been filled in
+        for(i = 0; i < markers.length; i++)
+        {
+            if (markers[i].metadata.id == clickedMarkerId)
+            {
+                //if we have question metadata on the marker, we fill in the form
+                if (markers[i].metadata.question != "")
+                {
+                    document.getElementsByName('question')[0].value = markers[i].metadata.questions.question;
+                    document.getElementsByName('answer1')[0].value = markers[i].metadata.questions.answer1;
+                    document.getElementsByName('answer2')[0].value = markers[i].metadata.questions.answer2;
+                    document.getElementsByName('answer3')[0].value = markers[i].metadata.questions.answer3;
+                    document.getElementsByName('answer4')[0].value = markers[i].metadata.questions.answer4;
+                    document.getElementsByName('points')[0].value = markers[i].metadata.questions.points;
+                    console.log(markers[i].metadata);
+
+                }
+                else
+                {
+                    ocument.getElementsByName('question')[0].value = "";
+                    document.getElementsByName('answer1')[0].value = "";
+                    document.getElementsByName('answer2')[0].value = "";
+                    document.getElementsByName('answer3')[0].value = "";
+                    document.getElementsByName('answer4')[0].value = "";
+                    document.getElementsByName('points')[0].value = 0;
+                }
+            }
+        }
     }
 
     function closeQuestionModel()
     {
         $('#questionModal').modal('toggle');
+    }
+
+    function saveQuestionForm(saveBtn)
+    {
+        var question = document.getElementsByName("question")[0].value; 
+        var answer1 = document.getElementsByName("answer1")[0].value;
+        var answer2 = document.getElementsByName("answer2")[0].value;
+        var answer3 = document.getElementsByName("answer3")[0].value;
+        var answer4 = document.getElementsByName("answer4")[0].value;
+        var points = document.getElementsByName("points")[0].value;
+      
+        var id = saveBtn.id.substring('saveButton'.length);
+        //find the marker associated with this form
+        for(i = 0; i<markers.length; i++)
+        {
+            if (markers[i].metadata.id == id)
+            {
+                markers[i].metadata.questions.question = question;
+                markers[i].metadata.questions.answer1 = answer1;
+                markers[i].metadata.questions.answer2 = answer2;
+                markers[i].metadata.questions.answer3 = answer3;
+                markers[i].metadata.questions.answer4 = answer4;
+                markers[i].metadata.questions.points = points;
+                //console.log(markers[i].metadata);
+            }
+        }
+
+
+
+
+        closeQuestionModel();
     }
 
     // When the user clicks on <span> (x), close the modal
@@ -167,7 +228,10 @@
                 });
                 //set marker name and add marker metadata
                 var markerName = "Marker " + markerId;
-                newMarker.metadata = {id:markerId, name:markerName, markerInfo:"", location:newLocation, isQR:0, isVisible:0};
+                var questions = {question:"", answer1:"", answer2:"", answer3:"", answer4:"", correntAnswer:"", points:0};
+
+                newMarker.metadata = {id:markerId, name:markerName, markerInfo:"", location:newLocation, isQR:0, isVisible:0, questions:questions};
+                //console.log(newMarker.metadata);
 
                 markers.push(newMarker);           
                 updateMarkerList();
@@ -267,6 +331,7 @@
                 var newDivInner = replaceAll(newDivInner, "qrCheck", "qrCheck" + markers[i].metadata.id);
                 var newDivInner = replaceAll(newDivInner, "visibleCheck", "visibleCheck" + markers[i].metadata.id);
                 var newDivInner = replaceAll(newDivInner, "markerInfo", "markerInfo" + markers[i].metadata.id);
+                var newDivInner = replaceAll(newDivInner, "addQuestionBtn", "addQuestionBtn" + markers[i].metadata.id);
                 var newDivInner = replaceAll(newDivInner, "markerId", markers[i].metadata.id);
 
                 //add the div to the list
@@ -291,6 +356,7 @@
                 {
                     document.getElementById("markerNameInput" + markers[i].metadata.id).value = markers[i].metadata.name;
                 }
+                
                 document.getElementById("markerInfo" + markers[i].metadata.id).value = markers[i].metadata.markerInfo;
                 document.getElementById("qrCheck" + markers[i].metadata.id).checked = markers[i].metadata.isQR;
                 document.getElementById("visibleCheck" + markers[i].metadata.id).checked = markers[i].metadata.isVisible;
@@ -312,7 +378,7 @@
     function removeMarker(removebtn)
     {
         //get the id of the marker by removing "removeMarkerButton"
-        var selectedMarkerId = removebtn.id.substring('removeMarkerButton'.length);;
+        var selectedMarkerId = removebtn.id.substring('removeMarkerButton'.length);
 
         //find the marker with the same id as the one of wich the remove button was clicked
         for (var i = 0 ; i < markers.length; i++) 
@@ -386,14 +452,12 @@
                 else if (document.getElementById("qrCheck" + markers[i].metadata.id).checked == true && document.getElementById("visibleCheck" + markers[i].metadata.id).checked == true)
                 {
                     markers[i].setIcon('/images/orangeqrmarker.png');  
-
                 }
                 else
                 {
                     markers[i].setIcon('/images/greenmarker.png');  
                 }
             }
-           
         }
     }
 
