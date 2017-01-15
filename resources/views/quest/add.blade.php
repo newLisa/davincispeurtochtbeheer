@@ -57,7 +57,6 @@
                             <button type=button class="btn btn-primary" onclick="clearMap()">Reset Map</button> 
                             <button type=button class="btn btn-primary" id="PolyButton" onclick="">Teken Polygoon</button>
                         </div>
-                    
 
                     <div class="col-md-8" id="map">
                     </div>
@@ -78,7 +77,6 @@
 </div>
 @endsection
 @section('javascript')
-
 
 <script>
     var modal = document.getElementById('questionModal');
@@ -163,9 +161,6 @@
             }
         }
 
-
-
-
         closeQuestionModel();
     }
 
@@ -213,7 +208,7 @@
                 });
                 polyMarkerId++;
 
-                 polyLocations.push(newLocation);
+                polyLocations.push(newLocation);
                 polyMarkers.push(newMarker);
             }
             else
@@ -356,7 +351,7 @@
                 {
                     document.getElementById("markerNameInput" + markers[i].metadata.id).value = markers[i].metadata.name;
                 }
-                
+
                 document.getElementById("markerInfo" + markers[i].metadata.id).value = markers[i].metadata.markerInfo;
                 document.getElementById("qrCheck" + markers[i].metadata.id).checked = markers[i].metadata.isQR;
                 document.getElementById("visibleCheck" + markers[i].metadata.id).checked = markers[i].metadata.isVisible;
@@ -418,7 +413,7 @@
         }
     }
 
-    //saves all the values in the form
+    //saves all the values in the form to the marker metadata
     function updateFormValues()
     {
         for(var i = 0; i < markers.length; ++i)

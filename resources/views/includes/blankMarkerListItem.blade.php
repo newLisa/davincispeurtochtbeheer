@@ -50,7 +50,7 @@
                                 'id' => 'addQuestionBtn',
                                 'onclick'=>'showQuestionModel(markerId)')) !!}
                     </div>
-                    
+
                     <div class="form-group">
                         {!! Form::label('Latitude') !!}
                         {!! Form::number('lat', null, 
@@ -65,6 +65,10 @@
                                         'class'=>'form-control LongitudeId',
                                         'readonly' => 'true',  
                                         'placeholder'=>'Longitude')) !!}
+                    </div>
+
+                    <div class="qr-Padding">
+                        {!! QrCode::size(200)->margin(0)->generate('2') !!}
                     </div>
 
                     <div class="form-group">

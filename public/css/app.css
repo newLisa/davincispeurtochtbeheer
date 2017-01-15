@@ -26,6 +26,12 @@
     float: left;
 }
 
+.qr-Padding
+{
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
 label.btn span {
   font-size: 1.5em ;
   padding-left: 0!important;
