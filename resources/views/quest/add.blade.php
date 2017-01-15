@@ -1,7 +1,4 @@
-
-
 @extends('layouts.app')
-
 
 <style>
     #map 
@@ -9,10 +6,10 @@
         height: 700px;
     }
 </style>
+
 @section('content')
 @include('includes.questionModel');
 @include('includes.blankMarkerListItem');
-
 
 <div class="col-md-2"></div>
     <div class="col-md-8">
@@ -76,8 +73,8 @@
     </div>
 </div>
 @endsection
-@section('javascript')
 
+@section('javascript')
 <script>
     var modal = document.getElementById('questionModal');
     var modalContent = document.getElementById("modal-content");
@@ -118,7 +115,7 @@
                     console.log(markers[i].metadata);
 
                 }
-                else
+                else //if we do not have data on the marker, show an empty form
                 {
                     ocument.getElementsByName('question')[0].value = "";
                     document.getElementsByName('answer1')[0].value = "";
@@ -131,11 +128,13 @@
         }
     }
 
+    //closes the question modal
     function closeQuestionModel()
     {
         $('#questionModal').modal('toggle');
     }
 
+    //saves all the values of the question-from to the marker metadata
     function saveQuestionForm(saveBtn)
     {
         var question = document.getElementsByName("question")[0].value; 
@@ -239,12 +238,12 @@
                         //open the right collapse 
                         if (markers[i].metadata.id == newMarker.metadata.id)
                         {
-                            document.getElementById('markerCollapse'+newMarker.metadata.id).className += " in";
+                            document.getElementById('markerCollapse'+newMarker.metadata.id).className += " in show";
                         }
                         //close the other collapses
-                        else if (hasClass(document.getElementById('markerCollapse'+markers[i].metadata.id), "in"))
+                        else if (hasClass(document.getElementById('markerCollapse'+markers[i].metadata.id), "in show"))
                         {
-                            $("#markerCollapse"+markers[i].metadata.id).removeClass("in");
+                            $("#markerCollapse"+markers[i].metadata.id).removeClass("in show");
                         }
                     }
                     //pan to the clicked marker
@@ -296,7 +295,7 @@
         });   
     }
 
-    //updates the list of created markers on the right side of the screen
+    //adds a new blank markerlist item to to list on the right side
     function updateMarkerList() 
     {
         if (markers.length > 0)
@@ -308,12 +307,12 @@
                 //fold open last collapse
                 if ((i + 1) == markers.length)
                 {
-                    document.getElementById('replaceThis').className += " in";
+                    document.getElementById('replaceThis').className += " in show";
                 }
                 //close the other collapses
-                else if (hasClass(document.getElementById('replaceThis'), "in"))
+                else if (hasClass(document.getElementById('replaceThis'), "in show"))
                 {
-                    $("#replaceThis").removeClass("in");
+                    $("#replaceThis").removeClass("in show");
                 }
 
                 //clone the original form and give the right id's to the elements
@@ -394,7 +393,7 @@
             if ((i + 1) == markers.length)
             {
                 var lastmarkerId = markers[i].metadata.id;
-                document.getElementById('markerCollapse' + lastmarkerId).className += " in";
+                document.getElementById('markerCollapse' + lastmarkerId).className += " in show";
             }
         }
         updateMarkerList();
