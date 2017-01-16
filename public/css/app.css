@@ -108,6 +108,10 @@ box-shadow: none;
 .btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
 	outline: 0 !important;
 }
+
+.collapse.in {
+    height: auto !important;
+}
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.

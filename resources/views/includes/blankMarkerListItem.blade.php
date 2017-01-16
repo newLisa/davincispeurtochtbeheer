@@ -1,13 +1,13 @@
 <div id="markerFormBlock" hidden="true">
-    <div class="panel panel-default" id="markerListItem">
-        <div class="panel-heading" role="tab" id="headingOne">
+    <div class="panel panel-default" id="markerListItemMarkerId">
+        <div class="panel-heading" role="tab" id="headingOneMarkerId">
           <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#replaceThis" aria-expanded="true" aria-controls="replaceThis" id="markerHeader">
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#markerCollapseMarkerId" aria-expanded="true" aria-controls="markerCollapseMarkerId" id="markerHeaderMarkerId">
               Marker Name
             </a>
           </h4>
         </div>
-        <div id="replaceThis" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+        <div id="markerCollapseMarkerId" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOneMarkerId">
           <div class="panel-body">
                 {{ Form::open(array('url' => 'quests/post')) }}
                     <div class="form-group">
@@ -15,7 +15,7 @@
                         {!! Form::text('Name', null, 
                                         array('required', 
                                         'class'=>'form-control', 
-                                        'id' => 'markerNameInput',
+                                        'id' => 'markerNameInputMarkerId',
                                         'placeholder'=>'Locatie Naam',
                                         'onkeyup'=>'updateText(this)')) !!}
                     </div>
@@ -26,19 +26,19 @@
                             array('required', 
                                   'class'=>'form-control', 
                                   'placeholder'=>'Locatie Informatie',
-                                  'id'=>'markerInfo')) !!}
+                                  'id'=>'markerInfoMarkerId')) !!}
                     </div>
 
                     <div class="form-check">
                         {!! Form::checkbox('isQr', null, false,
-                            array('class'=>'form-check-input', 'id'=>'qrCheck', 'onClick' => 'updateMarkerImage(markerId)')) 
+                            array('class'=>'form-check-input', 'id'=>'qrCheckMarkerId', 'onClick' => 'updateMarkerImage(markerId)')) 
                         !!}
                         {!! Form::label('QR Marker') !!}
                     </div>
 
                     <div class="form-check">
                         {!! Form::checkbox('isVisible', null, false,
-                            array('class'=>'form-check-input', 'id'=>'visibleCheck', 'onClick' => 'updateMarkerImage(markerId)')) 
+                            array('class'=>'form-check-input', 'id'=>'visibleCheckMarkerId', 'onClick' => 'updateMarkerImage(markerId)')) 
                         !!}
                         {!! Form::label('Altijd Zichtbaar') !!}
                         
@@ -47,7 +47,7 @@
                     <div class="form-group">
                         {!! Form::button('Vraag Toevoegen', 
                           array('class'=>'btn btn-primary',
-                                'id' => 'addQuestionBtn',
+                                'id' => 'addQuestionBtnMarkerId',
                                 'onclick'=>'showQuestionModel(markerId)')) !!}
                     </div>
 
@@ -74,7 +74,7 @@
                     <div class="form-group">
                         {!! Form::button('Verwijder Locatie', 
                           array('class'=>'btn btn-danger',
-                                'id' => 'removeMarkerButton',
+                                'id' => 'removeMarkerButtonMarkerId',
                                 'onclick'=>'removeMarker(this)')) !!}
                     </div>
                 {{ Form::close() }}

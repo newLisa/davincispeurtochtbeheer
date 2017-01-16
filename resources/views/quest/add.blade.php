@@ -192,6 +192,7 @@
         google.maps.event.addListener(map, "click", function(event) 
         {
             updateFormValues();
+
             //store the location the user has clicked
             var lat = event.latLng.lat();
             var lng = event.latLng.lng();
@@ -233,19 +234,7 @@
                ///add a on-click listener to the google marker we just created 
                 newMarker.addListener('click', function() 
                 {
-                    for (i = 0; i < markers.length; i++)
-                    {
-                        //open the right collapse 
-                        if (markers[i].metadata.id == newMarker.metadata.id)
-                        {
-                            document.getElementById('markerCollapse'+newMarker.metadata.id).className += " in show";
-                        }
-                        //close the other collapses
-                        else if (hasClass(document.getElementById('markerCollapse'+markers[i].metadata.id), "in show"))
-                        {
-                            $("#markerCollapse"+markers[i].metadata.id).removeClass("in show");
-                        }
-                    }
+                    openMarkerCollapse(newMarker.metadata.id);
                     //pan to the clicked marker
                     map.panTo(newMarker.getPosition());
                 });
@@ -253,6 +242,8 @@
                 markerId++;
             }      
         });
+
+
 
         //add a on-click listerer to the button that 
         //draws the polygon between the markers in the marker array
@@ -295,6 +286,23 @@
         });   
     }
 
+    function openMarkerCollapse(markerId)
+    {
+        document.getElementById('markerCollapse' + markerId).className += " in";
+        
+        for (i = 0; i < markers.length; i++)
+        {
+            console.log(hasClass(document.getElementById('markerCollapse' + markers[i].metadata.id), " in"));
+            //close the collapses
+            if (markers[i].metadata.id != markerId)
+            {
+                console.log(markerId + " " + markers[i].metadata.id);
+
+                $("#markerCollapse" + markers[i].metadata.id).removeClass("in");
+            }
+        }
+    }
+
     //adds a new blank markerlist item to to list on the right side
     function updateMarkerList() 
     {
@@ -304,28 +312,13 @@
             
             for (i = 0; i < markers.length; i++)
             {
-                //fold open last collapse
-                if ((i + 1) == markers.length)
-                {
-                    document.getElementById('replaceThis').className += " in show";
-                }
-                //close the other collapses
-                else if (hasClass(document.getElementById('replaceThis'), "in show"))
-                {
-                    $("#replaceThis").removeClass("in show");
-                }
+                var markerId = markers[i].metadata.id;
 
                 //clone the original form and give the right id's to the elements
                 var original = document.getElementById('markerFormBlock');
                 var newDiv = original.cloneNode(true);
-                var newDivInner = replaceAll(newDiv.innerHTML, "replaceThis", "markerCollapse" + markers[i].metadata.id);
-                var newDivInner = replaceAll(newDivInner, "markerHeader", "markerHeader" + markers[i].metadata.id);
-                var newDivInner = replaceAll(newDivInner, "markerNameInput", "markerNameInput" + markers[i].metadata.id);
-                var newDivInner = replaceAll(newDivInner, "removeMarkerButton", "removeMarkerButton" + markers[i].metadata.id);
-                var newDivInner = replaceAll(newDivInner, "qrCheck", "qrCheck" + markers[i].metadata.id);
-                var newDivInner = replaceAll(newDivInner, "visibleCheck", "visibleCheck" + markers[i].metadata.id);
-                var newDivInner = replaceAll(newDivInner, "markerInfo", "markerInfo" + markers[i].metadata.id);
-                var newDivInner = replaceAll(newDivInner, "addQuestionBtn", "addQuestionBtn" + markers[i].metadata.id);
+
+                var newDivInner = replaceAll(newDiv.innerHTML, "MarkerId", markers[i].metadata.id);
                 var newDivInner = replaceAll(newDivInner, "markerId", markers[i].metadata.id);
 
                 //add the div to the list
@@ -362,11 +355,17 @@
                     if (document.getElementById("markerNameInput" + markers[i].metadata.id).value != "") 
                     {
                         markers[i].metadata.name = document.getElementById("markerNameInput" + markers[i].metadata.id).value;
-                        
                     }
+                }
+                
+                if (i + 1 == markers.length) 
+                {
+                    openMarkerCollapse(markers[i].metadata.id);
                 }
             }
         }
+
+
     }
 
     function removeMarker(removebtn)
@@ -389,12 +388,12 @@
                 i--;
             }
 
-            //opens the last marker collapse after removal
+/*            //opens the last marker collapse after removal
             if ((i + 1) == markers.length)
             {
                 var lastmarkerId = markers[i].metadata.id;
                 document.getElementById('markerCollapse' + lastmarkerId).className += " in show";
-            }
+            }*/
         }
         updateMarkerList();
     }
