@@ -29,11 +29,15 @@
                                   'id'=>'markerInfoMarkerId')) !!}
                     </div>
 
-                    <div class="form-check">
+                    <div class="form-check" style="display:inline">
                         {!! Form::checkbox('isQr', null, false,
                             array('class'=>'form-check-input', 'id'=>'qrCheckMarkerId', 'onClick' => 'updateMarkerImage(markerId)')) 
                         !!}
                         {!! Form::label('QR Marker') !!}
+                    </div>
+
+                     <div class="qr-Padding" id="qr-codeMarkerId">
+                        <!-- QR-code is generated here -->
                     </div>
 
                     <div class="form-check">
@@ -43,7 +47,7 @@
                         {!! Form::label('Altijd Zichtbaar') !!}
                         
                     </div>
-
+                    
                     <div class="form-group">
                         {!! Form::button('Vraag Toevoegen', 
                           array('class'=>'btn btn-primary',
@@ -65,10 +69,6 @@
                                         'class'=>'form-control LongitudeId',
                                         'readonly' => 'true',  
                                         'placeholder'=>'Longitude')) !!}
-                    </div>
-
-                    <div class="qr-Padding">
-                        {!! QrCode::size(200)->margin(0)->generate('2') !!}
                     </div>
 
                     <div class="form-group">

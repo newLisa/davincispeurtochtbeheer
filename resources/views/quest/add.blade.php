@@ -55,10 +55,10 @@
                             <button type=button class="btn btn-primary" id="PolyButton" onclick="">Teken Polygoon</button>
                         </div>
 
-                    <div class="col-md-8" id="map">
+                    <div class="col-md-6" id="map">
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                         </div>
                     </div>
@@ -235,11 +235,12 @@
                     map.panTo(newMarker.getPosition());
                 });
                 
+
+                makeQRCode(markerId);
+
                 markerId++;
             }      
         });
-
-
 
         //add a on-click listerer to the button that 
         //draws the polygon between the markers in the marker array
@@ -281,6 +282,23 @@
             }          
         });   
     }
+
+    function makeQRCode (markerIdText) 
+    {        
+        var qrcode;
+        var qr = document.getElementById("qr-code"+ markerId);
+        var options = 
+        {
+            width: 65,
+            height: 65,
+            colorDark : "#000000",
+            colorLight : "#FFFFFF"
+        };
+
+        qrcode = new QRCode(qr, options);
+        qrcode.makeCode(markerIdText);
+    }
+
 
     function openMarkerCollapse(markerId)
     {

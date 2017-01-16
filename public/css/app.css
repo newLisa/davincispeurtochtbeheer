@@ -28,8 +28,15 @@
 
 .qr-Padding
 {
-    padding-top: 10px;
-    padding-bottom: 20px;
+    float: right;
+    margin-right: 5px;
+    display: inline;
+}
+
+.qr-Padding img
+{
+    display: inline !important;
+    margin-top: 25px;
 }
 
 label.btn span {
