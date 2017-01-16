@@ -160,13 +160,16 @@
     }
 
     // When the user clicks on <span> (x), close the modal
-    close.onclick = function() {
+    close.onclick = function() 
+    {
         $('#questionModal').modal('toggle');
     }
 
     // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modalContent) {
+    window.onclick = function(event) 
+    {
+        if (event.target == modalContent) 
+        {
             $('#questionModal').modal('toggle');
         }
     }
@@ -222,19 +225,20 @@
                 var questions = {question:"", answer1:"", answer2:"", answer3:"", answer4:"", correntAnswer:"", points:0};
 
                 newMarker.metadata = {id:markerId, name:markerName, markerInfo:"", location:newLocation, isQR:0, isVisible:0, questions:questions};
-                //console.log(newMarker.metadata);
 
                 markers.push(newMarker);           
                 updateMarkerList();
+                document.getElementById("markerNameInput" + markerId).focus();
 
                ///add a on-click listener to the google marker we just created 
                 newMarker.addListener('click', function() 
                 {
                     openMarkerCollapse(newMarker.metadata.id);
+                    document.getElementById("markerNameInput" + newMarker.metadata.id).focus();
+
                     //pan to the clicked marker
                     map.panTo(newMarker.getPosition());
                 });
-                
 
                 makeQRCode(markerId);
 
@@ -283,7 +287,7 @@
         });   
     }
 
-    function makeQRCode (markerIdText) 
+    function makeQRCode (qrCodeText) 
     {        
         var qrcode;
         var qr = document.getElementById("qr-code"+ markerId);
@@ -296,9 +300,8 @@
         };
 
         qrcode = new QRCode(qr, options);
-        qrcode.makeCode(markerIdText);
+        qrcode.makeCode(qrCodeText);
     }
-
 
     function openMarkerCollapse(markerId)
     {
@@ -378,8 +381,6 @@
                 }
             }
         }
-
-
     }
 
     function removeMarker(removebtn)
@@ -401,13 +402,6 @@
 
                 i--;
             }
-
-/*            //opens the last marker collapse after removal
-            if ((i + 1) == markers.length)
-            {
-                var lastmarkerId = markers[i].metadata.id;
-                document.getElementById('markerCollapse' + lastmarkerId).className += " in show";
-            }*/
         }
         updateMarkerList();
     }
