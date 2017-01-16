@@ -112,8 +112,6 @@
                     document.getElementsByName('answer3')[0].value = markers[i].metadata.questions.answer3;
                     document.getElementsByName('answer4')[0].value = markers[i].metadata.questions.answer4;
                     document.getElementsByName('points')[0].value = markers[i].metadata.questions.points;
-                    console.log(markers[i].metadata);
-
                 }
                 else //if we do not have data on the marker, show an empty form
                 {
@@ -156,11 +154,9 @@
                 markers[i].metadata.questions.answer3 = answer3;
                 markers[i].metadata.questions.answer4 = answer4;
                 markers[i].metadata.questions.points = points;
-                //console.log(markers[i].metadata);
             }
         }
-
-        closeQuestionModel();
+        console.log(markers[0].metadata);
     }
 
     // When the user clicks on <span> (x), close the modal
@@ -357,7 +353,7 @@
                         markers[i].metadata.name = document.getElementById("markerNameInput" + markers[i].metadata.id).value;
                     }
                 }
-                
+
                 if (i + 1 == markers.length) 
                 {
                     openMarkerCollapse(markers[i].metadata.id);
