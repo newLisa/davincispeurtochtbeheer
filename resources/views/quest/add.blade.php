@@ -156,7 +156,6 @@
                 markers[i].metadata.questions.points = points;
             }
         }
-        console.log(markers[0].metadata);
     }
 
     // When the user clicks on <span> (x), close the modal
@@ -240,7 +239,7 @@
                     map.panTo(newMarker.getPosition());
                 });
 
-                makeQRCode(markerId);
+                makeQRCode();
 
                 markerId++;
             }      
@@ -287,20 +286,26 @@
         });   
     }
 
-    function makeQRCode (qrCodeText) 
-    {        
-        var qrcode;
-        var qr = document.getElementById("qr-code"+ markerId);
-        var options = 
+    function makeQRCode () 
+    {   
+        for (var i = 0; i < markers.length; i++)
         {
-            width: 65,
-            height: 65,
-            colorDark : "#000000",
-            colorLight : "#FFFFFF"
-        };
+            var qr = document.getElementById("qr-code"+ markers[i].metadata.id);
+            
+            var options = 
+            {
+                width: 65,
+                height: 65,
+                colorDark : "#000000",
+                colorLight : "#FFFFFF",
+                correctLevel : QRCode.CorrectLevel.Q
+            };
 
-        qrcode = new QRCode(qr, options);
-        qrcode.makeCode(qrCodeText);
+            var qrcode;
+            qrcode = new QRCode(qr, options);
+            qrcode.makeCode(markers[i].metadata.id.toString());
+        }
+        console.log(markers);
     }
 
     function openMarkerCollapse(markerId)
@@ -309,12 +314,9 @@
         
         for (i = 0; i < markers.length; i++)
         {
-            console.log(hasClass(document.getElementById('markerCollapse' + markers[i].metadata.id), " in"));
             //close the collapses
             if (markers[i].metadata.id != markerId)
             {
-                console.log(markerId + " " + markers[i].metadata.id);
-
                 $("#markerCollapse" + markers[i].metadata.id).removeClass("in");
             }
         }
