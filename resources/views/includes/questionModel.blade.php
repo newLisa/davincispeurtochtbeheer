@@ -98,7 +98,7 @@
 
                     <div class="modal-footer">
                         {!! Form::button('Opslaan', 
-                          array('class'=>'btn btn-primary',
+                          array('class'=>'btn btn-primary btn-block',
                           'type'=>'button',
                           'id'=>'saveButton',
                           'name'=>'saveButton',

@@ -50,7 +50,7 @@
                     
                     <div class="form-group">
                         {!! Form::button('Vraag Toevoegen', 
-                          array('class'=>'btn btn-primary',
+                          array('class'=>'btn btn-primary btn-block',
                                 'id' => 'addQuestionBtnMarkerId',
                                 'onclick'=>'showQuestionModel(markerId)')) !!}
                     </div>
@@ -73,7 +73,7 @@
 
                     <div class="form-group">
                         {!! Form::button('Verwijder Locatie', 
-                          array('class'=>'btn btn-danger',
+                          array('class'=>'btn btn-danger btn-block',
                                 'id' => 'removeMarkerButtonMarkerId',
                                 'onclick'=>'removeMarker(this)')) !!}
                     </div>
