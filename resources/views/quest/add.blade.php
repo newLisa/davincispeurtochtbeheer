@@ -21,7 +21,7 @@
                 <div class="panel-body">
                     <h2>Quest Toevoegen</h2>
 
-                    {{ Form::open(array('url' => 'quests/post')) }}
+                    {{ Form::open(array(null, null, 'onsubmit' => 'PostForm(this); return false;','method' => 'get')) }}
                         <div class="form-group">
                             {!! Form::label('Quest Naam') !!}
                             {!! Form::text('name', null, 
@@ -61,7 +61,7 @@
                         </div>
                         <div class="form-group" id="saveQuestBtn">
                             {!! Form::submit('Opslaan', 
-                              array('class'=>'btn btn-success')) !!}
+                              array('class'=>'btn btn-success'),null) !!}
                         </div>
                     </div>
 
@@ -91,90 +91,9 @@
     var markers = [];
     var polyMarkers = [];
     var drawPolyButton = document.getElementById('PolyButton');
+    document.getElementById("saveQuestBtn").firstChild.className += "btn btn-success";
 
-    //question Model setup
-    // When the user clicks on the button, open the modal
-    function showQuestionModel(clickedMarkerId)
-    {
-        //show the modal
-        $('#questionModal').modal('toggle');
-        //set the markerId on the savebutton
-        document.getElementsByName('saveButton')[0].id = "saveButton" + clickedMarkerId;
-
-        //check to see if the question has been filled in
-        for(i = 0; i < markers.length; i++)
-        {
-            if (markers[i].metadata.id == clickedMarkerId)
-            {
-                //if we have question metadata on the marker, we fill in the form
-                if (markers[i].metadata.question != "")
-                {
-                    document.getElementsByName('question')[0].value = markers[i].metadata.questions.question;
-                    document.getElementsByName('answer1')[0].value = markers[i].metadata.questions.answer1;
-                    document.getElementsByName('answer2')[0].value = markers[i].metadata.questions.answer2;
-                    document.getElementsByName('answer3')[0].value = markers[i].metadata.questions.answer3;
-                    document.getElementsByName('answer4')[0].value = markers[i].metadata.questions.answer4;
-                    document.getElementsByName('points')[0].value = markers[i].metadata.questions.points;
-                }
-                else //if we do not have data on the marker, show an empty form
-                {
-                    ocument.getElementsByName('question')[0].value = "";
-                    document.getElementsByName('answer1')[0].value = "";
-                    document.getElementsByName('answer2')[0].value = "";
-                    document.getElementsByName('answer3')[0].value = "";
-                    document.getElementsByName('answer4')[0].value = "";
-                    document.getElementsByName('points')[0].value = 0;
-                }
-            }
-        }
-    }
-
-    //closes the question modal
-    function closeQuestionModel()
-    {
-        $('#questionModal').modal('toggle');
-    }
-
-    //saves all the values of the question-from to the marker metadata
-    function saveQuestionForm(saveBtn)
-    {
-        var question = document.getElementsByName("question")[0].value; 
-        var answer1 = document.getElementsByName("answer1")[0].value;
-        var answer2 = document.getElementsByName("answer2")[0].value;
-        var answer3 = document.getElementsByName("answer3")[0].value;
-        var answer4 = document.getElementsByName("answer4")[0].value;
-        var points = document.getElementsByName("points")[0].value;
-      
-        var id = saveBtn.id.substring('saveButton'.length);
-        //find the marker associated with this form
-        for(i = 0; i<markers.length; i++)
-        {
-            if (markers[i].metadata.id == id)
-            {
-                markers[i].metadata.questions.question = question;
-                markers[i].metadata.questions.answer1 = answer1;
-                markers[i].metadata.questions.answer2 = answer2;
-                markers[i].metadata.questions.answer3 = answer3;
-                markers[i].metadata.questions.answer4 = answer4;
-                markers[i].metadata.questions.points = points;
-            }
-        }
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    close.onclick = function() 
-    {
-        $('#questionModal').modal('toggle');
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) 
-    {
-        if (event.target == modalContent) 
-        {
-            $('#questionModal').modal('toggle');
-        }
-    }
+    
 
     //Map setup
     function initMap() 
@@ -541,6 +460,95 @@
     function hasClass(element, cls) 
     {
         return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+    }
+
+    //question Model setup
+    // When the user clicks on the button, open the modal
+    function showQuestionModel(clickedMarkerId)
+    {
+        //show the modal
+        $('#questionModal').modal('toggle');
+        //set the markerId on the savebutton
+        document.getElementsByName('saveButton')[0].id = "saveButton" + clickedMarkerId;
+
+        //check to see if the question has been filled in
+        for(i = 0; i < markers.length; i++)
+        {
+            if (markers[i].metadata.id == clickedMarkerId)
+            {
+                //if we have question metadata on the marker, we fill in the form
+                if (markers[i].metadata.question != "")
+                {
+                    document.getElementsByName('question')[0].value = markers[i].metadata.questions.question;
+                    document.getElementsByName('answer1')[0].value = markers[i].metadata.questions.answer1;
+                    document.getElementsByName('answer2')[0].value = markers[i].metadata.questions.answer2;
+                    document.getElementsByName('answer3')[0].value = markers[i].metadata.questions.answer3;
+                    document.getElementsByName('answer4')[0].value = markers[i].metadata.questions.answer4;
+                    document.getElementsByName('points')[0].value = markers[i].metadata.questions.points;
+                }
+                else //if we do not have data on the marker, show an empty form
+                {
+                    ocument.getElementsByName('question')[0].value = "";
+                    document.getElementsByName('answer1')[0].value = "";
+                    document.getElementsByName('answer2')[0].value = "";
+                    document.getElementsByName('answer3')[0].value = "";
+                    document.getElementsByName('answer4')[0].value = "";
+                    document.getElementsByName('points')[0].value = 0;
+                }
+            }
+        }
+    }
+
+    //closes the question modal
+    function closeQuestionModel()
+    {
+        $('#questionModal').modal('toggle');
+    }
+
+    //saves all the values of the question-from to the marker metadata
+    function saveQuestionForm(saveBtn)
+    {
+        var question = document.getElementsByName("question")[0].value; 
+        var answer1 = document.getElementsByName("answer1")[0].value;
+        var answer2 = document.getElementsByName("answer2")[0].value;
+        var answer3 = document.getElementsByName("answer3")[0].value;
+        var answer4 = document.getElementsByName("answer4")[0].value;
+        var points = document.getElementsByName("points")[0].value;
+      
+        var id = saveBtn.id.substring('saveButton'.length);
+        //find the marker associated with this form
+        for(i = 0; i<markers.length; i++)
+        {
+            if (markers[i].metadata.id == id)
+            {
+                markers[i].metadata.questions.question = question;
+                markers[i].metadata.questions.answer1 = answer1;
+                markers[i].metadata.questions.answer2 = answer2;
+                markers[i].metadata.questions.answer3 = answer3;
+                markers[i].metadata.questions.answer4 = answer4;
+                markers[i].metadata.questions.points = points;
+            }
+        }
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    close.onclick = function() 
+    {
+        $('#questionModal').modal('toggle');
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) 
+    {
+        if (event.target == modalContent) 
+        {
+            $('#questionModal').modal('toggle');
+        }
+    }
+
+    function PostForm(event)
+    {
+        alert('hoi');
     }
 
 </script>

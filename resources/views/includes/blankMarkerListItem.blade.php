@@ -13,7 +13,7 @@
                     <div class="form-group">
                         {!! Form::label('Locatie Naam') !!}
                         {!! Form::text('Name', null, 
-                                        array('required', 
+                                        array( 
                                         'class'=>'form-control', 
                                         'id' => 'markerNameInputMarkerId',
                                         'placeholder'=>'Locatie Naam',
@@ -23,7 +23,7 @@
                     <div class="form-group">
                         {!! Form::label('Locatie Informatie') !!}
                         {!! Form::textarea('info', null, 
-                            array('required', 
+                            array( 
                                   'class'=>'form-control', 
                                   'placeholder'=>'Locatie Informatie',
                                   'id'=>'markerInfoMarkerId')) !!}
