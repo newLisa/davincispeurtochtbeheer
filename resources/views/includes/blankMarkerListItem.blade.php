@@ -31,7 +31,7 @@
 
                     <div class="form-check" style="display:inline">
                         {!! Form::checkbox('isQr', null, false,
-                            array('class'=>'form-check-input', 'id'=>'qrCheckMarkerId', 'onClick' => 'updateMarkerImage(markerId)')) 
+                            array('class'=>'form-check-input', 'id'=>'qrCheckMarkerId', 'onClick' => 'updateMarkerImage(markerId)', 'onchange'=>'ToggleQR(this)')) 
                         !!}
                         {!! Form::label('QR Marker') !!}
                     </div>

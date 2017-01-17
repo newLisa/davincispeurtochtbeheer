@@ -55,17 +55,20 @@
                             <button type=button class="btn btn-primary" id="PolyButton" onclick="">Teken Polygoon</button>
                         </div>
 
-                    <div class="col-md-6" id="map">
+                    <div class="col-md-6 col-xs-12">
+                        <div id="map">
+                            
+                        </div>
+                        <div class="form-group" id="saveQuestBtn">
+                            {!! Form::submit('Opslaan', 
+                              array('class'=>'btn btn-success')) !!}
+                        </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-xs-12">
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::submit('Opslaan', 
-                      array('class'=>'btn btn-success')) !!}
                 </div>
                 {{ Form::close() }}
             </div>
@@ -306,6 +309,20 @@
             qrcode.makeCode(markers[i].metadata.id.toString());
         }
         console.log(markers);
+    }
+
+    function ToggleQR(selectbox)
+    {
+        id = selectbox.id;
+        id = id.substring('qrCheck'.length);
+        if (selectbox.checked)
+        {
+            $('#qr-code' + id).show();
+        }
+        else
+        {
+            $('#qr-code' + id).hide()   
+        }
     }
 
     function openMarkerCollapse(markerId)

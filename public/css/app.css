@@ -39,12 +39,18 @@
     float: right;
     margin-right: 5px;
     display: inline;
+    display: none;
 }
 
 .qr-Padding img
 {
     display: inline !important;
     margin-top: 25px;
+}
+
+#saveQuestBtn
+{
+    margin-top: 20px;
 }
 
 label.btn span 

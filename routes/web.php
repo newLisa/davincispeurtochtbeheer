@@ -23,7 +23,7 @@ Route::get('/home', 'HomeController@index');
 Route::get('/quests/add', 'QuestController@add');
 Route::get('/quests/edit/{id}', 'QuestController@edit');
 Route::post('/quests/post', 'QuestController@postAction');
-Route::post('/quest/put/{id}', 'QuestController@putAction');
+Route::post('/quests/put/{id}', 'QuestController@putAction');
 Route::get('/quests/delete/{id}', 'QuestController@deleteAction');
 Route::get('/quests/restore/{id}', 'QuestController@restoreAction');
 
