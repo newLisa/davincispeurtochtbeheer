@@ -380,7 +380,11 @@
                 {
                     document.getElementById("markerNameInput" + markers[i].metadata.id).value = markers[i].metadata.name;
                 }
-
+                
+                if (markers[i].metadata.questions.question != "") 
+                {
+                    changeQuestionButton(markers[i].metadata.id);
+                }
                 document.getElementById("markerInfo" + markers[i].metadata.id).value = markers[i].metadata.markerInfo;
                 document.getElementById("qrCheck" + markers[i].metadata.id).checked = markers[i].metadata.isQR;
                 document.getElementById("visibleCheck" + markers[i].metadata.id).checked = markers[i].metadata.isVisible;
