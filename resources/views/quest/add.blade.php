@@ -159,6 +159,7 @@
                 markers[i].metadata.questions.points = points;
             }
         }
+        changeQuestionButton(id);
     }
 
     // When the user clicks on <span> (x), close the modal
@@ -541,6 +542,14 @@
     function hasClass(element, cls) 
     {
         return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+    }
+
+    //changes the button text to edit and color of the button
+    function changeQuestionButton(id)
+    {
+        $('#addQuestionBtn' + id).removeClass('btn-primary');
+        document.getElementById("addQuestionBtn" + id).innerHTML = 'Vraag Aanpassen';
+        $('#addQuestionBtn' + id).addClass('btn-warning');
     }
 
 </script>
