@@ -27,3 +27,5 @@ Route::post('/quests/put/{id}', 'QuestController@putAction');
 Route::get('/quests/delete/{id}', 'QuestController@deleteAction');
 Route::get('/quests/restore/{id}', 'QuestController@restoreAction');
 
+Route::get('/pdf', 'PdfController@index');
+
