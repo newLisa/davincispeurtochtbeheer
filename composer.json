@@ -24,7 +24,8 @@
     },
     "autoload": {
         "classmap": [
-            "database"
+            "database",
+            "vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64"
         ],
         "psr-4": {
             "App\\": "app/"

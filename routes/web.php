@@ -28,4 +28,6 @@ Route::get('/quests/delete/{id}', 'QuestController@deleteAction');
 Route::get('/quests/restore/{id}', 'QuestController@restoreAction');
 
 Route::get('/pdf', 'PdfController@index');
+Route::get('/test/qrtest', 'PdfController@DownloadPdf');
+
 
