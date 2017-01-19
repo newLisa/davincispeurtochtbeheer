@@ -26,6 +26,7 @@
                                         <a title="Edit" href="{{ url('/quests/edit/' . $quest->id) }}" class="fa fa-pencil fa-lg" aria-hidden="true">&nbsp</a>  
                                         <a title="Delete" href="{{ url('/quests/delete/' . $quest->id) }}" class="fa fa-trash fa-lg" aria-hidden="true">&nbsp</a>  
                                         <a title="View" href="#" class="fa fa-eye fa-lg" aria-hidden="true"></a>
+                                         <a title="Generate QR" href="{{ url('/qr-pdf/' . $quest->id)}}" class="fa fa-qrcode fa-lg" aria-hidden="true"></a>
                                     </td>
                                 </tr>
                             @endif
