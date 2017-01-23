@@ -60,8 +60,9 @@
                             
                         </div>
                         <div class="form-group" id="saveQuestBtn">
-                            {!! Form::submit('Opslaan', 
-                              array('class'=>'btn btn-success')) !!}
+                            {!! Form::button('Opslaan', 
+                              array('class'=>'btn btn-success',
+                                    'onclick'=>'PostData()')) !!}
                         </div>
                     </div>
 
@@ -157,9 +158,30 @@
                 markers[i].metadata.questions.answer3 = answer3;
                 markers[i].metadata.questions.answer4 = answer4;
                 markers[i].metadata.questions.points = points;
+
+                if (document.getElementById('correct1').checked)
+                {
+                    markers[i].metadata.questions.correctAnswer = answer1;
+                }
+                else if(document.getElementById('correct2').checked)
+                {
+                    markers[i].metadata.questions.correctAnswer = answer2;
+                }
+                 else if(document.getElementById('correct3').checked)
+                {
+                    markers[i].metadata.questions.correctAnswer = answer3;
+                }
+                 else if(document.getElementById('correct4').checked)
+                {
+                    markers[i].metadata.questions.correctAnswer = answer4;
+                }
             }
         }
+
+       
+
         changeQuestionButton(id);
+        closeQuestionModel();
     }
 
     // When the user clicks on <span> (x), close the modal
@@ -225,7 +247,7 @@
                 });
                 //set marker name and add marker metadata
                 var markerName = "Marker " + markerId;
-                var questions = {question:"", answer1:"", answer2:"", answer3:"", answer4:"", correntAnswer:"", points:0};
+                var questions = {question:"", answer1:"", answer2:"", answer3:"", answer4:"", correctAnswer:"", points:0};
 
                 newMarker.metadata = {id:markerId, name:markerName, markerInfo:"", location:newLocation, isQR:0, isVisible:0, questions:questions};
 
@@ -298,8 +320,8 @@
             
             var options = 
             {
-                width: 65,
-                height: 65,
+                width: 60,
+                height: 60,
                 colorDark : "#000000",
                 colorLight : "#FFFFFF",
                 correctLevel : QRCode.CorrectLevel.Q
@@ -309,7 +331,6 @@
             qrcode = new QRCode(qr, options);
             qrcode.makeCode(markers[i].metadata.id.toString());
         }
-        console.log(markers);
     }
 
     function ToggleQR(selectbox)

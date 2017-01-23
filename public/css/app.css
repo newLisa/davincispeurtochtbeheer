@@ -45,7 +45,7 @@
 .qr-Padding img
 {
     display: inline !important;
-    margin-top: 25px;
+    /*margin-top: 25px;*/
 }
 
 #saveQuestBtn

@@ -85,6 +85,7 @@
 
     <!-- Scripts -->
     <script src="/js/tether.min.js"></script>
+    <script src="/js/post.js"></script>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/qrcode.js"></script>
 <!--     <script src="/js/bootstrap.min.js"></script> -->
