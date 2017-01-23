@@ -27,8 +27,8 @@ function PostData()
     $.ajax({
             type: "POST",
             url: url + 'postQuest/',
-            data: data,
+            data: JSON.stringify(data),
             succes:null,
-            contentType: 'application/json'
+            dataType: 'application/json'
             });
 }
