@@ -80,6 +80,7 @@
 
 @section('javascript')
 <script>
+    var redirectLink = "{{URL::to('home')}}";
     var modal = document.getElementById('questionModal');
     var modalContent = document.getElementById("modal-content");
     var close = document.getElementById("closeQuestionModel");

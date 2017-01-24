@@ -48,4 +48,6 @@ function PostData()
             succes:null,
             dataType: 'application/json'
             });
+
+    window.location.href = redirectLink;
 }
