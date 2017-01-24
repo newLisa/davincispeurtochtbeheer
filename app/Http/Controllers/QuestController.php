@@ -28,21 +28,45 @@ class QuestController extends Controller
     public function edit($id)
     {
         $client = new Client();
+        $baseUrl = 'http://www.intro.dvc-icta.nl/SpeurtochtApi/web/';
         
-      $res = $client->get('http://www.intro.dvc-icta.nl/SpeurtochtApi/web/speurtocht/' . $id, ['http_errors' => false]);
+        //get the basic info of the quest
+        $questRequest = $client->get($baseUrl . 'speurtocht/' . $id, ['http_errors' => false]);  
+        //get the polygon from the quest
+        $polygonLocationsRequest = $client->get($baseUrl . 'polygon/' . $id, ['http_errors' => false]);
+        //get the marker locations from the quest
+        $markerLocationsRequest = $client->get($baseUrl . 'koppeltochtlocatie/' . $id, ['http_errors' => false]);
+
+        //create array and put al the jsonRequests in there
+        $data = [];
+        $data[] = $questRequest;
+        $data[] = $polygonLocationsRequest;
+        $data[] = $markerLocationsRequest;
       
-        $status = $res->getStatusCode();
-        if ($status == 200)
-         {
-
-            $quest = json_decode ($res->getBody());
-            return view('quest/edit', ['quest' => $quest]);
+        //Check if we could get the data else throw exeption
+        foreach ($data as $request) {
+            if ($request->getStatusCode() != 200)
+            {
+                return view('quest/404');
+            }
         }
-        else
-        {
-            return view('quest/404');
+        
+        $quest = json_decode ($questRequest->getBody());
+        $polygonLocations = json_decode ($polygonLocationsRequest->getBody());
+        $markerLocations = json_decode ($markerLocationsRequest->getBody());       
 
-        }       
+        foreach ($markerLocations as $markerLocation) {
+            $markerLocation->question = json_decode($client->get($baseUrl . 'vraag/' . $markerLocation->question_id, ['http_errors' => false])->getBody());
+        }
+
+        $allQuestData = [];
+        $allQuestData['quest'] = $quest;
+        $allQuestData['polygonLocations'] = $polygonLocations;
+        $allQuestData['markerLocations'] = $markerLocations;
+
+
+        return view('quest/edit', ['quest' => $allQuestData]);
+
     }
 
     public function postAction()
