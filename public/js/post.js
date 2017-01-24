@@ -37,7 +37,8 @@ function PostData()
     }
     var data = {
         quest:quest,
-        marker:marker
+        marker:marker,
+        polygonMarkers:polygonMarkers
     };
     console.log(JSON.stringify(data));
     $.ajax({

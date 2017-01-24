@@ -90,7 +90,8 @@
     var map;
     var polyLocations = [];
     var markers = [];
-    var polyMarkers = [];
+    var polyMarkers = []; // this array is to place the poly markers on the map.
+    var polygonMarkers = []; //This array is to sent the markers to the db.
     var drawPolyButton = document.getElementById('PolyButton');
 
     //question Model setup
@@ -202,7 +203,7 @@
     //Map setup
     function initMap() 
     {
-        //default location for the camera to zoom zo
+        //default location for the camera to zoom to, set to the davinci school entrance as default
         var leerpark = {lat: 51.7986, lng: 4.68061};
         var map = new google.maps.Map(document.getElementById('map'), 
         {
@@ -224,7 +225,8 @@
             //check of we are in polygon draw state or place markers state
             if (drawPolygon) 
             {
-                 var newMarker = new google.maps.Marker
+                var newJsonMarker = {lat: newLocation.lat, lng: newLocation.lng, orderNumber: polyMarkerId};
+                var newMarker = new google.maps.Marker
                 ({
                     position: newLocation,
                     map: map,
@@ -234,6 +236,7 @@
 
                 polyLocations.push(newLocation);
                 polyMarkers.push(newMarker);
+                polygonMarkers.push(newJsonMarker);
             }
             else
             {
