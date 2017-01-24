@@ -51,3 +51,99 @@ function PostData()
 
     window.location.href = redirectLink;
 }
+
+function PutData()
+{
+    updateFormValues()
+    var url = 'http://www.intro.dvc-icta.nl/SpeurtochtApi/web/';
+    var questName = document.getElementById('questName').value;
+    var questCourse = document.getElementById('questCourse').value;
+    var questInfo = document.getElementById('questInfo').value;
+
+    var quest = {
+        id: questId,
+        name: questName,
+        course: questCourse,
+        info: questInfo
+    };
+    var marker = [];
+    var updateMarker = [];
+
+    for(i = 0; i < markers.length; i++)
+    {
+        if (markers[i].metadata.id <= highestEditId) 
+        {
+            updateMarker.push({
+                id: markers[i].metadata.id,
+                name: markers[i].metadata.name,
+                markerInfo: markers[i].metadata.markerInfo,
+                isQr: markers[i].metadata.isQR,
+                isVisible: markers[i].metadata.isVisible,
+                location: {
+                    lat: markers[i].metadata.location.lat,
+                    lng: markers[i].metadata.location.lng
+                },
+                questions: {
+                    id: markers[i].metadata.questions.id,
+                    answer1: markers[i].metadata.questions.answer1,
+                    answer2: markers[i].metadata.questions.answer2,
+                    answer3: markers[i].metadata.questions.answer3,
+                    answer4: markers[i].metadata.questions.answer4,
+                    correctAnswer: markers[i].metadata.questions.correctAnswer,
+                    points: markers[i].metadata.questions.points,
+                    question: markers[i].metadata.questions.question
+                }
+            });
+        }
+        else
+        {
+            marker.push({
+                name: markers[i].metadata.name,
+                markerInfo: markers[i].metadata.markerInfo,
+                isQr: markers[i].metadata.isQR,
+                isVisible: markers[i].metadata.isVisible,
+                location: {
+                    lat: markers[i].metadata.location.lat,
+                    lng: markers[i].metadata.location.lng
+                },
+                questions: {
+                    answer1: markers[i].metadata.questions.answer1,
+                    answer2: markers[i].metadata.questions.answer2,
+                    answer3: markers[i].metadata.questions.answer3,
+                    answer4: markers[i].metadata.questions.answer4,
+                    correctAnswer: markers[i].metadata.questions.correctAnswer,
+                    points: markers[i].metadata.questions.points,
+                    question: markers[i].metadata.questions.question
+                }
+            });
+        }
+    }
+    var postData = {
+        markers: marker,
+        questId: questId
+    };
+
+    var putData = {
+        markers: updateMarker,
+        quest: quest,
+        polygonMarkers: polygonMarkers
+    }
+    console.log(JSON.stringify(putData));
+    $.ajax({
+            type: "POST",
+            url: url + 'marker/',
+            data: JSON.stringify(postData),
+            succes:null,
+            dataType: 'application/json'
+            });
+
+    $.ajax({
+            type: "POST",
+            url: url + 'putQuest/',
+            data: JSON.stringify(putData),
+            succes:null,
+            dataType: 'application/json'
+            });
+
+    window.location.href = redirectLink;
+}

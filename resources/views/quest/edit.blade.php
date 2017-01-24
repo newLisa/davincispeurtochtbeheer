@@ -11,8 +11,6 @@
 @include('includes.questionModel');
 @include('includes.blankMarkerListItem');
 
-<?php var_dump($quest['markerLocations']); ?>
-
 <div class="col-md-2"></div>
     <div class="col-md-8">
         <div class="col-md-12">
@@ -64,7 +62,7 @@
                         <div class="form-group" id="saveQuestBtn">
                             {!! Form::button('Opslaan', 
                               array('class'=>'btn btn-success',
-                                    'onclick'=>'PostData()')) !!}
+                                    'onclick'=>'PutData()')) !!}
                         </div>
                     </div>
 
@@ -82,6 +80,7 @@
 
 @section('javascript')
 <script>
+    var questId = <?php echo $quest['quest']->id; ?>;
     var redirectLink = "{{URL::to('home')}}";
     var modal = document.getElementById('questionModal');
     var modalContent = document.getElementById("modal-content");
@@ -98,7 +97,15 @@
     var markers = [];
     var polyData = <?php echo json_encode($quest['polygonLocations']); ?>;
     var markersJsonData = <?php echo json_encode($quest['markerLocations']); ?>;
-
+    var highestEditId = 0;
+    for (var i = markersJsonData.length - 1; i >= 0; i--) {
+        if(markerId < markersJsonData[i]['id'])
+        {
+            markerId = markersJsonData[i]['id'];
+            highestEditId = markersJsonData[i]['id'];
+        }
+    }
+    markerId++;
 
     //question Model setup
     // When the user clicks on the button, open the modal
@@ -267,6 +274,8 @@
                ///add a on-click listener to the google marker we just created 
                 newMarker.addListener('click', function() 
                 {
+                    console.log('Marker: ' + newMarker.metadata.id);
+
                     openMarkerCollapse(newMarker.metadata.id);
                     document.getElementById("markerNameInput" + newMarker.metadata.id).focus();
 
@@ -306,7 +315,7 @@
                 //change the button text to remove
                 document.getElementById("PolyButton").innerHTML = 'Verwijder Polygoon';
             }
-            else if (polyLocations.length < 3)
+            else if (polyLocations.length < 3 && drawPolygon)
             {
                 alert('Plaats tenminste 3 markers voor de polygoon');
             }
@@ -319,14 +328,14 @@
                 drawPolygon = true;
                 //clear the array of poly locations
                 polyLocations = [];
+                polygonMarkers = []; //This array is to sent the markers to the db.
+
                 //change text back to draw
                 document.getElementById("PolyButton").innerHTML = 'Teken Polygoon';
             }          
         });   
 
         function placePoly(polyJsonData) {
-            console.log(polyJsonData[0]['id']);
-
             for (var i = polyJsonData.length - 1; i >= 0; i--) {
                 polyJsonData[i]
                 var newLocation = {lat: polyJsonData[i].lat, lng: polyJsonData[i].lng};
@@ -368,7 +377,7 @@
                 //change the button text to remove
                 document.getElementById("PolyButton").innerHTML = 'Verwijder Polygoon';
             }
-            else if (polyLocations.length < 3)
+            else if (polyLocations.length < 3 && drawPolygon)
             {
                 alert('Plaats tenminste 3 markers voor de polygoon');
             }
@@ -388,8 +397,12 @@
 
         function placeMarkers(markersData) {
             for (var i = markersData.length - 1; i >= 0; i--) {
+
+
                 
                 var newLocation = {lat: markersData[i].latitude, lng: markersData[i].longitude};
+
+                //set marker name and add marker metadata
                 //create a new google marker with the location info we got
                 var newMarker = new google.maps.Marker
                 ({
@@ -402,6 +415,7 @@
                 var markerName = markersData[i]['name'];
                 var questions = 
                 {
+                    id: markersData[i]['question']['id'],
                     question: markersData[i]['question']['vraag'], 
                     answer1: markersData[i]['question']['answer_1'], 
                     answer2: markersData[i]['question']['answer_2'], 
@@ -410,10 +424,9 @@
                     correctAnswer: markersData[i]['question']['correct_answer'], 
                     points: markersData[i]['question']['points']
                 };
-
                 newMarker.metadata = 
                 {
-                    id: markerId, 
+                    id: markersData[i]['id'], 
                     name: markersData[i]['name'], 
                     markerInfo: markersData[i]['info'], 
                     location: newLocation, 
@@ -422,23 +435,22 @@
                     questions: questions
                 };
 
+
                 markers.push(newMarker);           
                 updateMarkerList();
-                document.getElementById("markerNameInput" + markerId).focus();
+                updateFormValues();
+                makeQRCode();
+                document.getElementById("markerNameInput" + newMarker.metadata.id).focus();
 
                ///add a on-click listener to the google marker we just created 
                 newMarker.addListener('click', function() 
                 {
-                    openMarkerCollapse(newMarker.metadata.id);
-                    document.getElementById("markerNameInput" + newMarker.metadata.id).focus();
+                    openMarkerCollapse(this.metadata.id);
+                    document.getElementById("markerNameInput" + this.metadata.id).focus();
 
                     //pan to the clicked marker
-                    map.panTo(newMarker.getPosition());
+                    map.panTo(this.getPosition());
                 });
-
-                makeQRCode();
-
-                markerId++;
             }
         }
 
@@ -607,6 +619,7 @@
     {
         for(var i = 0; i < markers.length; ++i)
         {
+            console.log(markers.length);
             if (document.getElementById("markerNameInput" + markers[i].metadata.id).value != "") 
             {
                 markers[i].metadata.name = document.getElementById("markerNameInput" + markers[i].metadata.id).value;
@@ -615,6 +628,7 @@
             markers[i].metadata.markerInfo = document.getElementById("markerInfo" + markers[i].metadata.id).value;
             markers[i].metadata.isQR = document.getElementById("qrCheck" + markers[i].metadata.id).checked;
             markers[i].metadata.isVisible = document.getElementById("visibleCheck" + markers[i].metadata.id).checked;
+            updateMarkerImage(markers[i].metadata.id);
         }
     }
 
@@ -664,6 +678,7 @@
             polyMarkers[i].setMap(null);
         }
         polyMarkers = [];
+
     }
 
     // Sets the map on all markers in the array.
