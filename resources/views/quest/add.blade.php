@@ -275,7 +275,7 @@
         //draws the polygon between the markers in the marker array
         google.maps.event.addDomListener(drawPolyButton, "click", function() 
         {
-            if (drawPolygon) //draw the polygon if we are in draw polygon state
+            if (drawPolygon && polyLocations.length > 2) //draw the polygon if we are in draw polygon state
             {
                 drawPolygon = false;
 
@@ -296,6 +296,10 @@
                 clearPolyMarkers();
                 //change the button text to remove
                 document.getElementById("PolyButton").innerHTML = 'Verwijder Polygoon';
+            }
+            else if (polyLocations.length < 3)
+            {
+                alert('Plaats tenminste 3 markers voor de polygoon');
             }
             else //if we are not in draw polygon state we remove the polygon
             {
