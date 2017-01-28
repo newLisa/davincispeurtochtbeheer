@@ -26,11 +26,12 @@
  	var qrSizeX = 175;
  	var qrSizeY = 175;
  	
+	//get markerIds from PHP
+	var markerIds = <?php echo json_encode($markerIds); ?>;
+	var markerNames = <?php echo json_encode($markerNames); ?>;
+
 	$(document).ready(function() 
 	{	
-		//get markerIds from PHP
-		var markerIds = <?php echo json_encode($markerIds); ?>;
-
 		// show the markers and the page and create PDF
 		ShowQRCodesOnPageAndCreatePDF(markerIds);
 	});
@@ -39,6 +40,11 @@
 	{   
 	    for (var i = 0; i < markerIds.length; i++)
 	    {
+
+	    	var qrName = document.createElement('h1');
+	    	qrName.innerHTML = markerNames[i].toString();
+	    	$('.panel-body')[0].append(qrName);
+
 	    	//create div to hold the qr-code and add it to the center div
 	    	var qrDiv = document.createElement("div");
 	    	qrDiv.setAttribute('id', "qr-div"+i);
@@ -67,7 +73,8 @@
 	       	var canvas = qrDiv.children[0];
 	       	//add it to the PDF
 			var imgData = canvas.toDataURL();
-			doc.addImage(imgData, 'PNG', docX, docY, qrSizeX, qrSizeY);
+			doc.text(docX, docY, markerNames[i]);
+			doc.addImage(imgData, 'PNG', docX, docY +10, qrSizeX, qrSizeY);
 
 			//if we are not at the last marker add a new page to the PDF
 			if (i !== markerIds.length -1)

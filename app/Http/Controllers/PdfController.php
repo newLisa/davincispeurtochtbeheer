@@ -37,14 +37,22 @@ class PdfController extends Controller
 		
 		//empty array to hold the marker ids as they are in the database
 		$markerIds = [];
+		//empty arroy to hold the marker names from the db
+		$markerNames = [];
 
+		//loop through all the markers
 		for($i = 0; $i < count($markers); $i++)
 		{
-			//add the markerId to the array
-			$markerIds[$i] = $markers[$i]->id;
+			//check to see if it is a qr-marker
+			if ($markers[$i]->is_qr) 
+			{
+				//add the markerId and names to the array
+				$markerIds[] = $markers[$i]->id;
+				$markerNames[] = $markers[$i]->name;				
+			}
 		}
 
-		//show the QR view and send the markerIds with it
-    	return view('qr/qr-download',compact('markerIds', 'questName'));
+		//show the QR view and send the data with it
+    	return view('qr/qr-download',compact('markerIds', 'questName', 'markerNames' ));
     }
 }
