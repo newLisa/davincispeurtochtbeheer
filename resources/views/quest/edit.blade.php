@@ -14,6 +14,7 @@
 <div class="col-md-2"></div>
     <div class="col-md-8">
         <div class="col-md-12">
+            <!-- Create a form and put all the quest data in it -->
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Quest Aanpassen ({{$quest['quest']->naam}})
@@ -80,8 +81,9 @@
 
 @section('javascript')
 <script>
+    //Fill all javascript variables with the data we get from the api
     var questId = <?php echo $quest['quest']->id; ?>;
-    var redirectLink = "{{URL::to('home')}}";
+    var redirectLink = "{{URL::to('home')}}"; //Make a link that will redirect home
     var modal = document.getElementById('questionModal');
     var modalContent = document.getElementById("modal-content");
     var close = document.getElementById("closeQuestionModel");
@@ -98,6 +100,7 @@
     var polyData = <?php echo json_encode($quest['polygonLocations']); ?>;
     var markersJsonData = <?php echo json_encode($quest['markerLocations']); ?>;
     var highestEditId = 0;
+    //Let the id's for newly added markers start higher than the highest one we got from the api so there wil be no duplicate id's and we know witch markers we need to update and witch to post
     for (var i = markersJsonData.length - 1; i >= 0; i--) {
         if(markerId < markersJsonData[i]['id'])
         {
@@ -461,7 +464,7 @@
 
 
     
-
+    //Generate a small qr to show if the qr checkbox is checked
     function makeQRCode () 
     {   
         for (var i = 0; i < markers.length; i++)
@@ -483,6 +486,7 @@
         }
     }
 
+    //Place the qr code on the form if it is checked
     function ToggleQR(selectbox)
     {
         id = selectbox.id;
@@ -497,13 +501,14 @@
         }
     }
 
+    //Open the collapse that is equal tot the given id
     function openMarkerCollapse(markerId)
     {
         document.getElementById('markerCollapse' + markerId).className += " in";
         
         for (i = 0; i < markers.length; i++)
         {
-            //close the collapses
+            //close the other collapses
             if (markers[i].metadata.id != markerId)
             {
                 $("#markerCollapse" + markers[i].metadata.id).removeClass("in");
@@ -578,6 +583,7 @@
         }
     }
 
+    //Remove a marker
     function removeMarker(removebtn)
     {
         //get the id of the marker by removing "removeMarkerButton"
