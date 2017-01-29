@@ -339,7 +339,7 @@
             for (var i = polyJsonData.length - 1; i >= 0; i--) {
                 polyJsonData[i]
                 var newLocation = {lat: polyJsonData[i].lat, lng: polyJsonData[i].lng};
-                var newJsonMarker = {lat: polyJsonData[i].lat, lng: polyJsonData[i].lng, orderNumber: polyJsonData[i].orderNumber};
+                var newJsonMarker = {lat: polyJsonData[i].lat, lng: polyJsonData[i].lng, orderNumber: polyJsonData[i].order_number};
                 var newMarker = new google.maps.Marker
                 ({
                     position: newLocation,

@@ -343,15 +343,15 @@
 
     function ToggleQR(selectbox)
     {
-        id = selectbox.id;
-        id = id.substring('qrCheck'.length);
+        var id = selectbox.id.substring('qrCheck'.length);
+        var $qrCode = $('#qr-code' + id);
         if (selectbox.checked)
         {
-            $('#qr-code' + id).show();
+            $qrCode.show();
         }
         else
         {
-            $('#qr-code' + id).hide()   
+            $qrCode.hide();
         }
     }
 

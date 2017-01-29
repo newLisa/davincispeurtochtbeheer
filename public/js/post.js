@@ -59,6 +59,7 @@ function PutData()
     var questName = document.getElementById('questName').value;
     var questCourse = document.getElementById('questCourse').value;
     var questInfo = document.getElementById('questInfo').value;
+    console.log(polygonMarkers);
 
     var quest = {
         id: questId,
