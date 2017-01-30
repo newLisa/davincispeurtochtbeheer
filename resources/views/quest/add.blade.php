@@ -301,7 +301,7 @@
                 //change the button text to remove
                 document.getElementById("PolyButton").innerHTML = 'Verwijder Polygoon';
             }
-            else if (polyLocations.length < 3)
+            else if (polyLocations.length < 3 && drawPolygon)
             {
                 alert('Plaats tenminste 3 markers voor de polygoon');
             }
