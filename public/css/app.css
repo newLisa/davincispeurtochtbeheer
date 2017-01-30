@@ -160,6 +160,10 @@ div[data-toggle="buttons"] label:active, div[data-toggle="buttons"] label.active
     height: auto !important;
 }
 
+tbody:nth-child(odd) {
+   background: #f1eded;
+}
+
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.

@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">{{$data['quest']->naam}} Highscores</div>
                 <?php $count = 1; ?>
-                <table class="table table-striped">
+                <table class="table">
                     <thead class="thead-inverse">
                         <tr>
                             <th>#</th>
