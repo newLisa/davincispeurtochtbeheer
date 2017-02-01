@@ -1,20 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="col-md-4"></div>
-	<div class="col-md-4" id="center">
-	<div class="panel panel-default">
-        <div class="panel-heading">
-           <h2>QR-codes voor {{ $questName }}</h2>
-        </div>
-        <div class="panel-body">
-			<a href="{{ url('/') }}">
-				<button class="btn btn-primary" style = "margin-bottom: 25px;">Ga Terug</button>
-			</a>
-			<button class="btn btn-success" onclick="DownLoadPDF()" style = "margin-top: -25px;">DownLoad PDF</button>
-		</div>
+	<div class="container panel panel-default">
+		<center>
+        	<div class="panel-heading">
+	           <h2>QR-codes voor {{ $questName }}</h2>
+	        </div>
+	        <div class="panel-body">
+				<a href="{{ url('/') }}">
+					<button class="btn btn-primary" style = "margin-bottom: 25px;">Ga Terug</button>
+				</a>
+				<button class="btn btn-success" onclick="DownLoadPDF()" style = "margin-top: -25px;">DownLoad PDF</button>
+			</div>
+		</center>
+		
 	</div>
-	<div class="col-md-4"></div>
 @endsection
 
 @section('javascript')
